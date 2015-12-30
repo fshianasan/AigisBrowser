@@ -1,0 +1,127 @@
+﻿<Controls:MetroWindow x:Name="MetroWindow" x:Class="AigisBrowser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AigisBrowser"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        
+        Title="AigisBrowser"
+        ShowTitleBar="True"
+        TitleCaps="False"
+
+        MinWidth="1100"
+        MinHeight="768"
+        
+        Icon="C:\Users\fshianer\Documents\Visual Studio 2015\Projects\AigisBrowser\AigisBrowser\Resources\icon.png"
+        ShowIconOnTitleBar="True"
+                      
+        ResizeMode="CanResizeWithGrip"
+                      
+        GlowBrush="{DynamicResource AccentColorBrush}"
+        WindowStartupLocation="CenterScreen">
+
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands>
+            <!-- Github -->
+            <Button Click="windowCommand_Github" ToolTip="Githubを開きます">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_github}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
+    
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <!-- Settings -->
+            <Button ToolTip="設定を開きます">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_settings}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0"
+                               VerticalAlignment="Center"
+                               Text="Settings"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Twitter -->
+            <Button Click="windowCommand_Twitter" ToolTip="運営Twitterを開きます">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_twitter_bird}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0"
+                               VerticalAlignment="Center"
+                               Text="Twitter" />
+                </StackPanel>
+            </Button>
+
+            <!-- DMM.com コミュニティ -->
+            <Button Click="windowCommand_Community" ToolTip="公式コミュニティを開きます">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_people}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0"
+                               VerticalAlignment="Center"
+                               Text="DMM.com" />
+                </StackPanel>
+            </Button>
+
+            <!-- Wiki -->
+            <Button Click="windowCommand_Wiki" ToolTip="Wikiを開きます">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_page}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0"
+                               VerticalAlignment="Center"
+                               Text="Wiki" />
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+
+    <Grid>
+        <DockPanel>
+            <!-- StatusBar -->
+            <StatusBar x:Name="statusBar"
+                       DockPanel.Dock="Bottom"
+                       HorizontalAlignment="Stretch">
+                <StatusBarItem>
+                    <TextBlock x:Name="statusBar_Address" />
+                </StatusBarItem>
+            </StatusBar>
+            
+            <!-- webBrowser -->
+            <WebBrowser x:Name="webBrowser"
+                        Navigated="webBrowser_Navigated"
+                        AllowDrop="False" />
+        </DockPanel>
+    </Grid>
+</Controls:MetroWindow>
