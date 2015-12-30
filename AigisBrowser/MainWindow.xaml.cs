@@ -40,6 +40,7 @@ namespace AigisBrowser
 
             if (webBrowser.Source == new Uri(GAME_URL))
             {
+                this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
                 windowResize(970, 640);
                 Console.WriteLine("Debug: webBrowser_Navigated if");
             }
@@ -162,6 +163,9 @@ namespace AigisBrowser
             {
                 if (webBrowser.Document == null) return;
 
+                this.MetroWindow.MinWidth = width;
+                this.MetroWindow.MinHeight = height + 54;
+
                 // webBrowser のリサイズ
                 this.webBrowser.Width = width;
                 this.webBrowser.Height = height;
@@ -186,13 +190,6 @@ namespace AigisBrowser
 
                 var frame = document_game.getElementById("aigis");
                 if (frame == null) return;
-
-                // game_frame > aigis > .emscripten_border > canvas
-                // var canvas = document_aigis.getElementById("canvas") as IHTMLObjectElement;
-                //  (canvas == null) return;
-
-                // canvas.width = string.Format("{0}px", width);
-                // canvas.height = string.Format("{0}px", height);
             }
             catch (Exception ex)
             {
