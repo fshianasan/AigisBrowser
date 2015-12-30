@@ -53,12 +53,12 @@
                     </Rectangle>
                     <TextBlock Margin="4 0 0 0"
                                VerticalAlignment="Center"
-                               Text="Settings"/>
+                               Text="設定"/>
                 </StackPanel>
             </Button>
 
             <!-- Twitter -->
-            <Button Click="windowCommand_Twitter" ToolTip="運営Twitterを開きます">
+            <Button Click="windowCommand_Twitter" ToolTip="運営Twitterのページを開きます">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
@@ -69,34 +69,34 @@
                     </Rectangle>
                     <TextBlock Margin="4 0 0 0"
                                VerticalAlignment="Center"
-                               Text="Twitter" />
+                               Text="運営Twitter" />
                 </StackPanel>
             </Button>
 
             <!-- DMM.com コミュニティ -->
-            <Button Click="windowCommand_Community" ToolTip="公式コミュニティを開きます">
+            <Button Click="windowCommand_Community" ToolTip="公式コミュニティのページを開きます">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_people}" />
+                                         Visual="{StaticResource appbar_people_profile}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                     <TextBlock Margin="4 0 0 0"
                                VerticalAlignment="Center"
-                               Text="DMM.com" />
+                               Text="コミュニティ" />
                 </StackPanel>
             </Button>
 
             <!-- Wiki -->
-            <Button Click="windowCommand_Wiki" ToolTip="Wikiを開きます">
+            <Button Click="windowCommand_Wiki" ToolTip="Wikiのページを開きます">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_page}" />
+                                         Visual="{StaticResource appbar_page_text}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                     <TextBlock Margin="4 0 0 0"
