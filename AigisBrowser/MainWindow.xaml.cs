@@ -23,14 +23,14 @@ namespace AigisBrowser
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        const string AD_URL = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
+        const string START_URL = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
         const string GAME_URL = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
 
         public MainWindow()
         {
             InitializeComponent();
 
-            this.webBrowser.Navigate(new Uri(AD_URL));
+            this.webBrowser.Navigate(new Uri(START_URL));
             webBrowser.LoadCompleted += WebBrowserOnLoadCompleted;
         }
 
@@ -41,7 +41,10 @@ namespace AigisBrowser
             if (webBrowser.Source == new Uri(GAME_URL))
             {
                 this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
+                this.statusBarItem_Address.Visibility = Visibility.Collapsed;
+                this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
                 windowResize(970, 640);
+                getTodayQuestName();
                 Console.WriteLine("Debug: webBrowser_Navigated if");
             }
         }
@@ -98,9 +101,16 @@ namespace AigisBrowser
             }
         }
 
+        // スクリーンショット撮影
+
+        // サウンドミュート
+
         private void webBrowser_Navigated(object sender, NavigationEventArgs e)
         {
+            // statusBar_Address に現在の URL を表示。
             statusBar_Address.Text = webBrowser.Source.ToString();
+
+            getTodayQuestName();
         }
 
         private void documentChange()
@@ -126,6 +136,7 @@ namespace AigisBrowser
 
                 document.createStyleSheet().cssText = css.ToString();
 
+                // 各種 Div 要素の変更。
                 var div01 = document.getElementById("dmm-ntgnavi-renew");
                 var div02 = document.getElementById("ntg-recommend");
                 var div03 = this.getDivElementsByClassName(document, "area-naviapp mg-t20");
@@ -140,8 +151,10 @@ namespace AigisBrowser
                 var iframe_game = document.frames.item(0) as mshtml.HTMLWindow2;
                 var document_game = iframe_game.document as mshtml.HTMLDocument;
 
-                var div11 = document_game.getElementById("aigis");
-                if (div11 != null) div11.style.width = 960;
+                var div11 = document_game.getElementById("aigis") as mshtml.HTMLIFrame;
+
+                // iframe#aigis の width をどうにか変更できないか？
+                if (div11 != null) div11.style.width = string.Format("{0}px", -10);
 
                 // game_frame > aigis
                 var iframe_aigis = document_game.frames.item(0) as mshtml.HTMLWindow2;
@@ -172,7 +185,7 @@ namespace AigisBrowser
 
                 // MainWindow のリサイズ
                 this.MetroWindow.Width = width;
-                this.MetroWindow.Height = height + 54;
+                this.MetroWindow.Height = height + 54; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。
 
                 // div
                 var document = webBrowser.Document as mshtml.HTMLDocument;
@@ -195,6 +208,39 @@ namespace AigisBrowser
             {
                 Console.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
             }
+        }
+
+        // 曜日限定クエスト取得
+        private void getTodayQuestName()
+        {
+            // 曜日限定クエスト
+            string[] questName = new string[7] {
+                "黄金の鎧", // 月曜日
+                "聖霊救出", // 火曜日
+                "空からの贈物, 男だけの祝杯", // 水曜日
+                "新魔水晶の守護者", // 木曜日 
+                "新魔水晶の守護者", // 金曜日
+                "強者の集う戦場", // 土曜日
+                "強者の集う戦場" //.日曜日
+            };
+
+            // 覚醒の宝珠
+            string[] questName2 = new string[7]
+            {
+                "覚醒の宝珠：白き射手", // 月曜日
+                "覚醒の宝珠：一角獣騎士", // 火曜日
+                "覚醒の宝珠：伝説の海賊", // 水曜日
+                "覚醒の宝珠：怪力少女", // 木曜日
+                "覚醒の宝珠：魔女", // 金曜日
+                "覚醒の宝珠：魔導鎧姫", // 土曜日
+                "覚醒の宝珠：月影の弓騎兵" // 日曜日
+            };
+
+            DateTime dt = DateTime.Now;
+
+            Console.WriteLine("曜日: {0}, 曜日限定: {1}, 覚醒: {2}\n", dt.DayOfWeek, questName[Convert.ToInt16(dt.DayOfWeek)], questName2[Convert.ToInt16(dt.DayOfWeek)]);
+
+            statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】{0} / {1}", questName[Convert.ToInt16(dt.DayOfWeek)], questName2[Convert.ToInt16(dt.DayOfWeek)]);
         }
 
         // コピペ

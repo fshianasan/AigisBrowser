@@ -11,6 +11,8 @@
         ShowTitleBar="True"
         TitleCaps="False"
 
+        Width="1100"
+        Height="768"
         MinWidth="1100"
         MinHeight="768"
         
@@ -38,7 +40,7 @@
             </Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.LeftWindowCommands>
-    
+
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <!-- Settings -->
@@ -104,7 +106,7 @@
                                Text="Wiki" />
                 </StackPanel>
             </Button>
-            
+
             <!-- Screenshot -->
             <Button ToolTip="スクリーンショット撮影">
                 <StackPanel Orientation="Horizontal">
@@ -139,11 +141,19 @@
             <StatusBar x:Name="statusBar"
                        DockPanel.Dock="Bottom"
                        HorizontalAlignment="Stretch">
-                <StatusBarItem>
+                
+                <!-- statuBar_Address URL 表示 -->
+                <StatusBarItem x:Name="statusBarItem_Address">
                     <TextBlock x:Name="statusBar_Address" />
                 </StatusBarItem>
+                
+                <!-- statusBar_TodayQuestName 曜日限定クエストの表示 -->
+                <StatusBarItem x:Name="statusBarItem_TodayQuestName"
+                               Visibility="Hidden">
+                    <TextBlock x:Name="statusBar_TodayQuestName" />
+                </StatusBarItem>
             </StatusBar>
-            
+
             <!-- webBrowser -->
             <WebBrowser x:Name="webBrowser"
                         Navigated="webBrowser_Navigated"
