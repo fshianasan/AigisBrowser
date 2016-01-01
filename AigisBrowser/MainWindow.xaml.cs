@@ -49,6 +49,12 @@ namespace AigisBrowser
             this.documentChange();
 
             this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
+
+            // 
+            this.windowButton_ScreenShot.Visibility = Visibility.Visible;
+            // this.windowButton_AudioMute.Visibility = Visibility.Visible;
+
+            // ステータスバーの表示切り替え
             this.statusBarItem_Address.Visibility = Visibility.Collapsed;
             this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
 
@@ -116,7 +122,7 @@ namespace AigisBrowser
             try
             {
                 this.takeScreenShot();
-                Console.WriteLine("windowsCommand_ScreenShot");
+                Debug.WriteLine("windowsCommand_ScreenShot()");
             }
             catch {
 
@@ -135,7 +141,7 @@ namespace AigisBrowser
                 imgScreen.Height = (int)this.webBrowser.ActualHeight;
                 imgScreen.Source = new DrawingImage(VisualTreeHelper.GetDrawing(this.webBrowser));
 
-                string fileName = string.Format("{0}.{1}", DateTime.Now.ToString("Aigis-yyMMdd-HHmmss"), "png");
+                string fileName = string.Format("Aigis-{0}.{1}", DateTime.Now.ToString("yyMMdd-HHmmss"), "png");
                 string directoryPath = string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots");
                 if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
                 string filePath = Path.Combine(directoryPath, fileName);
@@ -163,7 +169,20 @@ namespace AigisBrowser
                     enc.Frames.Add(BitmapFrame.Create(rtb));
                     enc.Save(fs);
 
-                    MessageBox.Show("スクリーンショット撮影に成功しました。");
+                    // MessageBox
+                    string msg = string.Format("スクリーンショット撮影に成功しました。\n\n保存場所：{0}\n\n保存したスクリーンショットを開きますか？", filePath);
+
+                    // スクリーンショットの画像を開くかどうか
+                    MessageBoxResult result = MessageBox.Show(msg, MetroWindow.Title, MessageBoxButton.YesNo, MessageBoxImage.Information);
+                    
+                    switch (result) {
+                        case MessageBoxResult.Yes:
+                            System.Diagnostics.Process.Start(filePath);
+                            break;
+                        case MessageBoxResult.No:
+                            break;
+                    }
+                    
                     Debug.WriteLine("takeScreenShot()");
                 }
             }

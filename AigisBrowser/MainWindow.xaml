@@ -108,7 +108,7 @@
             </Button>
 
             <!-- Screenshot -->
-            <Button ToolTip="スクリーンショット撮影" Click="windowCommand_ScreenShot">
+            <Button x:Name="windowButton_ScreenShot" ToolTip="スクリーンショット撮影" Click="windowCommand_ScreenShot" Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
@@ -121,7 +121,7 @@
             </Button>
 
             <!-- Audio Mute -->
-            <Button ToolTip="音量をミュートにします">
+            <Button x:Name="windowButton_AudioMute" ToolTip="音量をミュートにします" Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
