@@ -275,6 +275,11 @@ namespace AigisBrowser
                 // MainWindow のリサイズ
                 this.MetroWindow.Width = width;
                 this.MetroWindow.Height = height + 54; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。}               
+
+                // http://stackoverflow.com/questions/4019831/how-do-you-center-your-main-window-in-wpf
+                Rect workArea = System.Windows.SystemParameters.WorkArea;
+                this.MetroWindow.Left = (workArea.Width - this.MetroWindow.Width) / 2 + workArea.Left;
+                this.MetroWindow.Top = (workArea.Height - this.MetroWindow.Height) / 2 + workArea.Top;
             }
             catch (Exception ex)
             {
