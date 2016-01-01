@@ -47,7 +47,7 @@ namespace AigisBrowser
         private async void LoadAsync() {
             await Task.Run(() => { System.Threading.Thread.Sleep(1000); });
             this.documentChange();
-            this.windowResize(964, 640);
+            this.windowResize(960, 640);
 
             //this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
             this.statusBarItem_Address.Visibility = Visibility.Collapsed;
@@ -118,15 +118,13 @@ namespace AigisBrowser
         {
             // statusBar_Address に現在の URL を表示。
             statusBar_Address.Text = webBrowser.Source.ToString();
-
-            getTodayQuestName();
         }
 
         private void documentChange()
         {
             try
             {
-                #region CSS
+                #region GAME_URLのCSS調整
                 StringBuilder css = new StringBuilder();
                 css.Append("body");
                 css.Append("{");
@@ -190,13 +188,14 @@ namespace AigisBrowser
                 this.webBrowser.Width = width;
                 this.webBrowser.Height = height;
 
-                // MetroWindow の最小値のリサイズ
-                this.MetroWindow.MinWidth = webBrowser.Width;
-                this.MetroWindow.MinHeight = webBrowser.Height + 54;
-
                 // MainWindow のリサイズ
                 this.MetroWindow.Width = webBrowser.Width;
                 this.MetroWindow.Height = webBrowser.Height + 54; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。}
+
+                // MetroWindow の最小値のリサイズ
+                this.MetroWindow.MinWidth = webBrowser.Width;
+                this.MetroWindow.MinHeight = webBrowser.Height + 54;
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
