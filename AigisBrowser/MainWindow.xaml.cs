@@ -6,20 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Diagnostics;
 
 using mshtml;
 
 using MahApps.Metro.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace AigisBrowser
 {
@@ -51,7 +48,7 @@ namespace AigisBrowser
             await Task.Run(() => { System.Threading.Thread.Sleep(1500); });
             this.documentChange();
 
-            //this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
+            this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
             this.statusBarItem_Address.Visibility = Visibility.Collapsed;
             this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
 
@@ -119,13 +116,14 @@ namespace AigisBrowser
             try
             {
                 this.takeScreenShot();
+                Console.WriteLine("windowsCommand_ScreenShot");
             }
             catch {
 
             }
         }
 
-        private void takeScreenShot()
+        public void takeScreenShot()
         {
             try
             {
@@ -141,16 +139,15 @@ namespace AigisBrowser
                 // var width = int.Parse(iframe.style.width);
                 // var height = int.Parse(iframe.style.height);
 
-                // image
-                System.Windows.Controls.Image imgScreen = new System.Windows.Controls.Image();
-                imgScreen.Width = (int)webBrowser.Width;
-                imgScreen.Height = (int)webBrowser.Height;
-                imgScreen.Source = new DrawingImage(VisualTreeHelper.GetDrawing(webBrowser));
+                // http://qiita.com/hbsnow/items/8ffd3b6d077d84a92900
+                Image imgScreen = new Image();
+                imgScreen.Width = (int)this.webBrowser.ActualWidth;
+                imgScreen.Height = (int)this.webBrowser.ActualHeight;
+                imgScreen.Source = new DrawingImage(VisualTreeHelper.GetDrawing(this.webBrowser));
 
-                string fileName = "test.png";
-                // string.Format("{0}.{1}", DateTime.Now.ToString("yyyyMMdd-HHmmss.fff"), "png");
-                string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                // string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots")
+                string fileName = string.Format("{0}.{1}", DateTime.Now.ToString("yyyyMMdd-HHmmss.fff"), "png");
+                string directoryPath = string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots");
+                if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
                 string filePath = System.IO.Path.Combine(directoryPath, fileName);
 
                 using (FileStream fs = new FileStream(directoryPath, FileMode.Create))
@@ -159,7 +156,7 @@ namespace AigisBrowser
                     DrawingContext cont = vis.RenderOpen();
                     cont.DrawImage(
                         imgScreen.Source,
-                        new Rect(new System.Drawing.Size(imgScreen.Width, imgScreen.Height))
+                        new Rect(new Size(imgScreen.Width, imgScreen.Height))
                     );
                     cont.Close();
 
@@ -175,10 +172,14 @@ namespace AigisBrowser
                     var enc = new PngBitmapEncoder();
                     enc.Frames.Add(BitmapFrame.Create(rtb));
                     enc.Save(fs);
+
+                    MessageBox.Show("スクリーンショット撮影成功！");
+                    Console.WriteLine("takeScreenShot()");
                 }
             }
             catch (Exception ex)
             {
+                MessageBox.Show("スクリーンショット撮影に失敗しました。");
                 Console.WriteLine("Exception: {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message);
             }
         }
@@ -300,9 +301,9 @@ namespace AigisBrowser
 
             DateTime dt = DateTime.Now;
 
-            Console.WriteLine("曜日: {0}, 曜日限定: {1}, 覚醒: {2}\n", dt.DayOfWeek, questName[Convert.ToInt16(dt.DayOfWeek)], questName2[Convert.ToInt16(dt.DayOfWeek)]);
+            Console.WriteLine("曜日: {0}, 曜日限定: {1}, 覚醒: {2}\n", dt.DayOfWeek, questName[Convert.ToInt16(dt.DayOfWeek) - 1], questName2[Convert.ToInt16(dt.DayOfWeek) - 1]);
 
-            statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】{0} / {1}", questName[Convert.ToInt16(dt.DayOfWeek)], questName2[Convert.ToInt16(dt.DayOfWeek)]);
+            statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】{0} / {1}", questName[Convert.ToInt16(dt.DayOfWeek) - 1], questName2[Convert.ToInt16(dt.DayOfWeek) - 1]);
         }
 
         // コピペ
