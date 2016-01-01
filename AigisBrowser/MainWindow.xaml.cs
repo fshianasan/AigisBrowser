@@ -36,17 +36,26 @@ namespace AigisBrowser
 
         private void WebBrowserOnLoadCompleted(object sender, NavigationEventArgs e)
         {
-            documentChange();
+            // documentChange();
 
             if (webBrowser.Source == new Uri(GAME_URL))
             {
-                this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
-                this.statusBarItem_Address.Visibility = Visibility.Collapsed;
-                this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
-                windowResize(970, 640);
-                getTodayQuestName();
-                Console.WriteLine("Debug: webBrowser_Navigated if");
+                LoadAsync();
             }
+        }
+
+        private async void LoadAsync() {
+            await Task.Run(() => { System.Threading.Thread.Sleep(1000); });
+            this.documentChange();
+            this.windowResize(964, 640);
+
+            //this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
+            this.statusBarItem_Address.Visibility = Visibility.Collapsed;
+            this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
+
+            getTodayQuestName();
+
+            Console.WriteLine("LoadAsync()");
         }
 
         // Githubを開く
@@ -121,10 +130,12 @@ namespace AigisBrowser
                 StringBuilder css = new StringBuilder();
                 css.Append("body");
                 css.Append("{");
+                css.Append("    margin: 0;");
                 css.Append("    overflow: hidden;");
                 css.Append("}");
-                css.Append("iframe");
+                css.Append("#game_frame");
                 css.Append("{");
+                css.Append("    left: -5px;");
                 css.Append("    position: fixed;");
                 css.Append("    z-index: 1;");
                 css.Append("}");
@@ -141,28 +152,27 @@ namespace AigisBrowser
                 var div02 = document.getElementById("ntg-recommend");
                 var div03 = this.getDivElementsByClassName(document, "area-naviapp mg-t20");
                 var div04 = document.getElementById("foot");
+                var iframe01 = document.getElementById("game_frame");
 
                 if (div01 != null) div01.style.display = "none";
                 if (div02 != null) div02.style.visibility = "hidden";
                 if (div03 != null) div03.style.display = "none";
                 if (div04 != null) div04.style.display = "none";
+                // if (iframe01 != null) iframe01.style.width = string.Format("{0}px", 960);
 
                 // game_frame
                 var iframe_game = document.frames.item(0) as mshtml.HTMLWindow2;
                 var document_game = iframe_game.document as mshtml.HTMLDocument;
 
-                var div11 = document_game.getElementById("aigis") as mshtml.HTMLIFrame;
-
-                // iframe#aigis の width をどうにか変更できないか？
-                if (div11 != null) div11.style.width = string.Format("{0}px", -10);
+                // var iframe02 = document_game.getElementById("aigis");
+                // if (iframe02 != null) iframe02.style.width = string.Format("{0}px", 960);
 
                 // game_frame > aigis
                 var iframe_aigis = document_game.frames.item(0) as mshtml.HTMLWindow2;
                 var document_aigis = iframe_aigis.document as mshtml.HTMLDocument;
-                
-                var div21 = document_aigis.getElementById("main_frame");
 
-                if (div21 != null) div21.style.display = "none";
+                var div11 = document_aigis.getElementById("main_frame");
+                if (div11 != null) div11.style.display = "none";
             }
             catch (Exception ex)
             {
@@ -176,34 +186,17 @@ namespace AigisBrowser
             {
                 if (webBrowser.Document == null) return;
 
-                this.MetroWindow.MinWidth = width;
-                this.MetroWindow.MinHeight = height + 54;
-
                 // webBrowser のリサイズ
                 this.webBrowser.Width = width;
                 this.webBrowser.Height = height;
 
+                // MetroWindow の最小値のリサイズ
+                this.MetroWindow.MinWidth = webBrowser.Width;
+                this.MetroWindow.MinHeight = webBrowser.Height + 54;
+
                 // MainWindow のリサイズ
-                this.MetroWindow.Width = width;
-                this.MetroWindow.Height = height + 54; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。
-
-                // div
-                var document = webBrowser.Document as mshtml.HTMLDocument;
-                if (document == null) return;
-
-               // game_frame
-                var iframe_game = document.frames.item(0) as mshtml.HTMLWindow2;
-                var document_game = iframe_game.document as mshtml.HTMLDocument;
-                if (document_game == null) return;
-
-                // game_frame > aigis
-                var iframe_aigis = document_game.frames.item(0) as mshtml.HTMLWindow2;
-                var document_aigis = iframe_aigis.document as mshtml.HTMLDocument;
-                if (document_aigis == null) return;
-
-                var frame = document_game.getElementById("aigis");
-                if (frame == null) return;
-            }
+                this.MetroWindow.Width = webBrowser.Width;
+                this.MetroWindow.Height = webBrowser.Height + 54; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。}
             catch (Exception ex)
             {
                 Console.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
