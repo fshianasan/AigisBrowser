@@ -1,20 +1,25 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Diagnostics;
 
 using mshtml;
 
 using MahApps.Metro.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace AigisBrowser
 {
@@ -36,8 +41,6 @@ namespace AigisBrowser
 
         private void WebBrowserOnLoadCompleted(object sender, NavigationEventArgs e)
         {
-            // documentChange();
-
             if (webBrowser.Source == new Uri(GAME_URL))
             {
                 LoadAsync();
@@ -45,14 +48,14 @@ namespace AigisBrowser
         }
 
         private async void LoadAsync() {
-            await Task.Run(() => { System.Threading.Thread.Sleep(1000); });
+            await Task.Run(() => { System.Threading.Thread.Sleep(1500); });
             this.documentChange();
-            this.windowResize(960, 640);
 
             //this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
             this.statusBarItem_Address.Visibility = Visibility.Collapsed;
             this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
 
+            this.windowResize(960, 640);
             getTodayQuestName();
 
             Console.WriteLine("LoadAsync()");
@@ -111,6 +114,74 @@ namespace AigisBrowser
         }
 
         // スクリーンショット撮影
+        private void windowCommand_ScreenShot(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.takeScreenShot();
+            }
+            catch {
+
+            }
+        }
+
+        private void takeScreenShot()
+        {
+            try
+            {
+                if (this.webBrowser.Document == null) return;
+
+                // div
+                // var document = webBrowser.Document as mshtml.HTMLDocument;
+                // if (document == null) return;
+
+                // var iframe = document.getElementById("game_frame");
+
+                // サイズ調整 コピペ
+                // var width = int.Parse(iframe.style.width);
+                // var height = int.Parse(iframe.style.height);
+
+                // image
+                System.Windows.Controls.Image imgScreen = new System.Windows.Controls.Image();
+                imgScreen.Width = (int)webBrowser.Width;
+                imgScreen.Height = (int)webBrowser.Height;
+                imgScreen.Source = new DrawingImage(VisualTreeHelper.GetDrawing(webBrowser));
+
+                string fileName = "test.png";
+                // string.Format("{0}.{1}", DateTime.Now.ToString("yyyyMMdd-HHmmss.fff"), "png");
+                string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                // string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots")
+                string filePath = System.IO.Path.Combine(directoryPath, fileName);
+
+                using (FileStream fs = new FileStream(directoryPath, FileMode.Create))
+                {
+                    var vis = new DrawingVisual();
+                    DrawingContext cont = vis.RenderOpen();
+                    cont.DrawImage(
+                        imgScreen.Source,
+                        new Rect(new System.Drawing.Size(imgScreen.Width, imgScreen.Height))
+                    );
+                    cont.Close();
+
+                    var rtb = new RenderTargetBitmap(
+                        (int)imgScreen.Width,
+                        (int)imgScreen.Height,
+                        96d,
+                        96d,
+                        PixelFormats.Default
+                    );
+                    rtb.Render(vis);
+
+                    var enc = new PngBitmapEncoder();
+                    enc.Frames.Add(BitmapFrame.Create(rtb));
+                    enc.Save(fs);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message);
+            }
+        }
 
         // サウンドミュート
 
@@ -150,7 +221,6 @@ namespace AigisBrowser
                 var div02 = document.getElementById("ntg-recommend");
                 var div03 = this.getDivElementsByClassName(document, "area-naviapp mg-t20");
                 var div04 = document.getElementById("foot");
-                var iframe01 = document.getElementById("game_frame");
 
                 if (div01 != null) div01.style.display = "none";
                 if (div02 != null) div02.style.visibility = "hidden";
@@ -183,18 +253,18 @@ namespace AigisBrowser
             try
             {
                 if (webBrowser.Document == null) return;
+                
+                // MetroWindow の最小値のリサイズ
+                this.MetroWindow.MinWidth = width;
+                this.MetroWindow.MinHeight = height + 54;
 
                 // webBrowser のリサイズ
                 this.webBrowser.Width = width;
                 this.webBrowser.Height = height;
 
                 // MainWindow のリサイズ
-                this.MetroWindow.Width = webBrowser.Width;
-                this.MetroWindow.Height = webBrowser.Height + 54; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。}
-
-                // MetroWindow の最小値のリサイズ
-                this.MetroWindow.MinWidth = webBrowser.Width;
-                this.MetroWindow.MinHeight = webBrowser.Height + 54;
+                this.MetroWindow.Width = width;
+                this.MetroWindow.Height = height + 54; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。}               
             }
             catch (Exception ex)
             {

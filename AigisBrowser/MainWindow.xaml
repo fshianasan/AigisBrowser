@@ -108,7 +108,7 @@
             </Button>
 
             <!-- Screenshot -->
-            <Button ToolTip="スクリーンショット撮影">
+            <Button ToolTip="スクリーンショット撮影" Click="windowCommand_ScreenShot">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
