@@ -129,28 +129,18 @@ namespace AigisBrowser
             {
                 if (this.webBrowser.Document == null) return;
 
-                // div
-                // var document = webBrowser.Document as mshtml.HTMLDocument;
-                // if (document == null) return;
-
-                // var iframe = document.getElementById("game_frame");
-
-                // サイズ調整 コピペ
-                // var width = int.Parse(iframe.style.width);
-                // var height = int.Parse(iframe.style.height);
-
                 // http://qiita.com/hbsnow/items/8ffd3b6d077d84a92900
                 Image imgScreen = new Image();
                 imgScreen.Width = (int)this.webBrowser.ActualWidth;
                 imgScreen.Height = (int)this.webBrowser.ActualHeight;
                 imgScreen.Source = new DrawingImage(VisualTreeHelper.GetDrawing(this.webBrowser));
 
-                string fileName = string.Format("{0}.{1}", DateTime.Now.ToString("yyyyMMdd-HHmmss.fff"), "png");
+                string fileName = string.Format("{0}.{1}", DateTime.Now.ToString("Aigis-yyMMdd-HHmmss"), "png");
                 string directoryPath = string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots");
                 if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
-                string filePath = System.IO.Path.Combine(directoryPath, fileName);
+                string filePath = Path.Combine(directoryPath, fileName);
 
-                using (FileStream fs = new FileStream(directoryPath, FileMode.Create))
+                using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     var vis = new DrawingVisual();
                     DrawingContext cont = vis.RenderOpen();
@@ -173,14 +163,14 @@ namespace AigisBrowser
                     enc.Frames.Add(BitmapFrame.Create(rtb));
                     enc.Save(fs);
 
-                    MessageBox.Show("スクリーンショット撮影成功！");
-                    Console.WriteLine("takeScreenShot()");
+                    MessageBox.Show("スクリーンショット撮影に成功しました。");
+                    Debug.WriteLine("takeScreenShot()");
                 }
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException ex)
             {
-                MessageBox.Show("スクリーンショット撮影に失敗しました。");
-                Console.WriteLine("Exception: {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message);
+                MessageBox.Show("スクリーンショット撮影に失敗しました。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("Exception: {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message);
             }
         }
 
