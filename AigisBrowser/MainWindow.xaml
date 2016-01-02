@@ -24,6 +24,14 @@
         GlowBrush="{DynamicResource AccentColorBrush}"
         WindowStartupLocation="CenterScreen">
 
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl>
+            <Controls:Flyout x:Name="settingsFlyout" Header="設定" Position="Right" Width="200">
+                <TextBlock Text="sss" />
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands>
             <!-- Github -->
@@ -44,7 +52,7 @@
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <!-- Settings -->
-            <Button ToolTip="設定を開きます">
+            <Button ToolTip="設定を開きます" Click="windowCommand_Settings">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
@@ -138,26 +146,31 @@
     <Grid>
         <DockPanel>
             <!-- StatusBar -->
+            <!-- StatusBar -->
             <StatusBar x:Name="statusBar"
                        DockPanel.Dock="Bottom"
                        HorizontalAlignment="Stretch">
-                
+
                 <!-- statuBar_Address URL 表示 -->
                 <StatusBarItem x:Name="statusBarItem_Address">
                     <TextBlock x:Name="statusBar_Address" />
                 </StatusBarItem>
-                
+
                 <!-- statusBar_TodayQuestName 曜日限定クエストの表示 -->
                 <StatusBarItem x:Name="statusBarItem_TodayQuestName"
-                               Visibility="Hidden">
+            		Visibility="Hidden">
                     <TextBlock x:Name="statusBar_TodayQuestName" />
                 </StatusBarItem>
             </StatusBar>
 
-            <!-- webBrowser -->
+            <!-- StatusBar -->
             <WebBrowser x:Name="webBrowser"
                         Navigated="webBrowser_Navigated"
                         AllowDrop="False" />
+
+            <!-- StatusBar -->
+
+            <!-- webBrowser -->
         </DockPanel>
     </Grid>
 </Controls:MetroWindow>

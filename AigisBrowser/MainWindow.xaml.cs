@@ -254,7 +254,7 @@ namespace AigisBrowser
             }
             catch (Exception ex)
             {
-                Console.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
+                Debug.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
             }
         }
 
@@ -314,7 +314,6 @@ namespace AigisBrowser
             };
 
             DateTime dt = DateTime.Now;
-            // DayOfWeek dow = dt.DayOfWeek;
             
             statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】{0} / {1}",
                 questName[(int)dt.DayOfWeek],
@@ -348,6 +347,13 @@ namespace AigisBrowser
             {
                 return null;
             }
+        }
+
+        // 設定(テスト)
+        private void windowCommand_Settings(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("まだ未実装です。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+            // this.settingsFlyout.IsOpen = true;
         }
     }
 }
