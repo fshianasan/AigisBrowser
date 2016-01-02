@@ -186,7 +186,7 @@ namespace AigisBrowser
                     Debug.WriteLine("takeScreenShot()");
                 }
             }
-            catch (UnauthorizedAccessException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("スクリーンショット撮影に失敗しました。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
                 Debug.WriteLine("Exception: {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message);
@@ -283,7 +283,7 @@ namespace AigisBrowser
             }
             catch (Exception ex)
             {
-                Console.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
+                Debug.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
             }
         }
 
@@ -292,32 +292,40 @@ namespace AigisBrowser
         {
             // 曜日限定クエスト
             string[] questName = new string[7] {
+                "強者の集う戦場", //日曜日
                 "黄金の鎧", // 月曜日
                 "聖霊救出", // 火曜日
                 "空からの贈物, 男だけの祝杯", // 水曜日
                 "新魔水晶の守護者", // 木曜日 
                 "新魔水晶の守護者", // 金曜日
                 "強者の集う戦場", // 土曜日
-                "強者の集う戦場" //.日曜日
             };
 
             // 覚醒の宝珠
             string[] questName2 = new string[7]
             {
+                "覚醒の宝珠：月影の弓騎兵", // 日曜日
                 "覚醒の宝珠：白き射手", // 月曜日
                 "覚醒の宝珠：一角獣騎士", // 火曜日
                 "覚醒の宝珠：伝説の海賊", // 水曜日
                 "覚醒の宝珠：怪力少女", // 木曜日
                 "覚醒の宝珠：魔女", // 金曜日
                 "覚醒の宝珠：魔導鎧姫", // 土曜日
-                "覚醒の宝珠：月影の弓騎兵" // 日曜日
             };
 
             DateTime dt = DateTime.Now;
+            // DayOfWeek dow = dt.DayOfWeek;
+            
+            statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】{0} / {1}",
+                questName[(int)dt.DayOfWeek],
+                questName2[(int)dt.DayOfWeek]
+            );
 
-            Console.WriteLine("曜日: {0}, 曜日限定: {1}, 覚醒: {2}\n", dt.DayOfWeek, questName[Convert.ToInt16(dt.DayOfWeek) - 1], questName2[Convert.ToInt16(dt.DayOfWeek) - 1]);
-
-            statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】{0} / {1}", questName[Convert.ToInt16(dt.DayOfWeek) - 1], questName2[Convert.ToInt16(dt.DayOfWeek) - 1]);
+            Debug.WriteLine("Debug: 曜日: {0}, 曜日限定: {1}, 覚醒: {2}",
+                dt.DayOfWeek,
+                questName[(int)dt.DayOfWeek],
+                questName2[(int)dt.DayOfWeek]
+            );
         }
 
         // コピペ
