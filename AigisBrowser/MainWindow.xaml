@@ -24,14 +24,6 @@
         GlowBrush="{DynamicResource AccentColorBrush}"
         WindowStartupLocation="CenterScreen">
 
-    <Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl>
-            <Controls:Flyout x:Name="settingsFlyout" Header="設定" Position="Right" Width="200">
-                <TextBlock Text="sss" />
-            </Controls:Flyout>
-        </Controls:FlyoutsControl>
-    </Controls:MetroWindow.Flyouts>
-
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands>
             <!-- Github -->
@@ -129,23 +121,23 @@
             </Button>
 
             <!-- Audio Mute -->
-            <Button x:Name="windowButton_AudioMute" ToolTip="音量をミュートにします" Visibility="Collapsed">
-                <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
-                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_sound_mute}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </StackPanel>
-            </Button>
+            <ToggleButton x:Name="windowButton_AudioMute"
+                          ToolTip="音量をミュートにします"
+                          Click="windowCommand_AudioMute"
+                          Style="{DynamicResource MetroCircleToggleButtonStyle}">
+                <Rectangle Width="20" Height="20"
+                           Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{DynamicResource appbar_sound_mute}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </ToggleButton>
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
 
     <Grid>
         <DockPanel>
-            <!-- StatusBar -->
             <!-- StatusBar -->
             <StatusBar x:Name="statusBar"
                        DockPanel.Dock="Bottom"
@@ -162,15 +154,13 @@
                     <TextBlock x:Name="statusBar_TodayQuestName" />
                 </StatusBarItem>
             </StatusBar>
-
-            <!-- StatusBar -->
+            <!-- /StatusBar -->
+            
+            <!-- webBrowser -->
             <WebBrowser x:Name="webBrowser"
                         Navigated="webBrowser_Navigated"
                         AllowDrop="False" />
-
-            <!-- StatusBar -->
-
-            <!-- webBrowser -->
+            <!-- /webBrowser -->
         </DockPanel>
     </Grid>
 </Controls:MetroWindow>

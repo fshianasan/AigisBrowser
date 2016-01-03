@@ -18,6 +18,8 @@ using mshtml;
 
 using MahApps.Metro.Controls;
 
+using System.Runtime.InteropServices;
+
 namespace AigisBrowser
 {
     /// <summary>
@@ -27,6 +29,12 @@ namespace AigisBrowser
     {
         const string START_URL = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
         const string GAME_URL = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
+
+        [DllImport("winmm.dll")]
+        public static extern int waveOutGetVolume(IntPtr h, out uint dwVolume);
+
+        [DllImport("winmm.dll")]
+        public static extern int waveOutSetVolume(IntPtr h, uint dwVolume);
 
         public MainWindow()
         {
@@ -52,7 +60,7 @@ namespace AigisBrowser
 
             // 
             this.windowButton_ScreenShot.Visibility = Visibility.Visible;
-            // this.windowButton_AudioMute.Visibility = Visibility.Visible;
+            //this.windowButton_AudioMute.Visibility = Visibility.Visible;
 
             // ステータスバーの表示切り替え
             this.statusBarItem_Address.Visibility = Visibility.Collapsed;
@@ -236,14 +244,10 @@ namespace AigisBrowser
                 if (div02 != null) div02.style.visibility = "hidden";
                 if (div03 != null) div03.style.display = "none";
                 if (div04 != null) div04.style.display = "none";
-                // if (iframe01 != null) iframe01.style.width = string.Format("{0}px", 960);
 
                 // game_frame
                 var iframe_game = document.frames.item(0) as mshtml.HTMLWindow2;
                 var document_game = iframe_game.document as mshtml.HTMLDocument;
-
-                // var iframe02 = document_game.getElementById("aigis");
-                // if (iframe02 != null) iframe02.style.width = string.Format("{0}px", 960);
 
                 // game_frame > aigis
                 var iframe_aigis = document_game.frames.item(0) as mshtml.HTMLWindow2;
@@ -352,8 +356,40 @@ namespace AigisBrowser
         // 設定(テスト)
         private void windowCommand_Settings(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("まだ未実装です。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
-            // this.settingsFlyout.IsOpen = true;
+            // MessageBox.Show("まだ未実装です。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+
+            Settings setting = new Settings();
+            setting.Show();
+        }
+
+        //private bool isMute = false;
+
+        // ミュート(テスト)
+        private void windowCommand_AudioMute(object sender, RoutedEventArgs e)
+        {
+            try {
+                uint savedVolume;
+                waveOutGetVolume(IntPtr.Zero, out savedVolume);
+
+                if (windowButton_AudioMute.IsChecked == true) {
+                    waveOutSetVolume(IntPtr.Zero, 0);
+                    Debug.WriteLine("IsChecked true");
+                    //isMute = true;
+                } else if (windowButton_AudioMute.IsChecked == false) {
+                    waveOutSetVolume(IntPtr.Zero, savedVolume);
+                    Debug.WriteLine("IsChecked false");
+                    //isMute = false;
+                }
+
+                this.MetroWindow.Closing += delegate
+                {
+                    waveOutSetVolume(IntPtr.Zero, savedVolume);
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
+            }
         }
     }
 }
