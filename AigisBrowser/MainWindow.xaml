@@ -108,7 +108,8 @@
             </Button>
 
             <!-- Screenshot -->
-            <Button x:Name="windowButton_ScreenShot" ToolTip="スクリーンショット撮影" Click="windowCommand_ScreenShot" Visibility="Collapsed">
+            <Button x:Name="windowButton_ScreenShot" ToolTip="スクリーンショット撮影"
+                    Click="windowCommand_ScreenShot" Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
@@ -121,18 +122,19 @@
             </Button>
 
             <!-- Audio Mute -->
-            <ToggleButton x:Name="windowButton_AudioMute"
-                          ToolTip="音量をミュートにします"
-                          Click="windowCommand_AudioMute"
-                          Style="{DynamicResource MetroCircleToggleButtonStyle}">
-                <Rectangle Width="20" Height="20"
-                           Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                     Visual="{DynamicResource appbar_sound_mute}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </ToggleButton>
+            <Button x:Name="windowButton_AudioMute"
+                    ToolTip="音量をミュートにします"
+                    Click="windowCommand_AudioMute" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{DynamicResource appbar_sound_mute}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
 

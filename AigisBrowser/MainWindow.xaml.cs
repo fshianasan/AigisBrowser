@@ -13,12 +13,12 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Diagnostics;
+using System.Windows.Interop;
+using System.Runtime.InteropServices;
 
 using mshtml;
 
 using MahApps.Metro.Controls;
-
-using System.Runtime.InteropServices;
 
 namespace AigisBrowser
 {
@@ -30,16 +30,11 @@ namespace AigisBrowser
         const string START_URL = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
         const string GAME_URL = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
 
-        [DllImport("winmm.dll")]
-        public static extern int waveOutGetVolume(IntPtr h, out uint dwVolume);
-
-        [DllImport("winmm.dll")]
-        public static extern int waveOutSetVolume(IntPtr h, uint dwVolume);
-
         public MainWindow()
         {
             InitializeComponent();
 
+            //ismute = false;
             this.webBrowser.Navigate(new Uri(START_URL));
             webBrowser.LoadCompleted += WebBrowserOnLoadCompleted;
         }
@@ -60,13 +55,15 @@ namespace AigisBrowser
 
             // 
             this.windowButton_ScreenShot.Visibility = Visibility.Visible;
-            //this.windowButton_AudioMute.Visibility = Visibility.Visible;
+            this.windowButton_AudioMute.Visibility = Visibility.Visible;
 
             // ステータスバーの表示切り替え
             this.statusBarItem_Address.Visibility = Visibility.Collapsed;
             this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
 
             this.windowResize(960, 640);
+
+			SetVolume(3);
             getTodayQuestName();
 
             Console.WriteLine("LoadAsync()");
@@ -356,35 +353,63 @@ namespace AigisBrowser
         // 設定(テスト)
         private void windowCommand_Settings(object sender, RoutedEventArgs e)
         {
-            // MessageBox.Show("まだ未実装です。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("まだ未実装です。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
 
-            Settings setting = new Settings();
-            setting.Show();
+            // Settings setting = new Settings();
+            // setting.Show();
         }
 
-        //private bool isMute = false;
-
         // ミュート(テスト)
+        [DllImport("winmm.dll")]
+		public static extern int waveOutGetVolume(IntPtr h, out uint dwVolume);
+
+        [DllImport("winmm.dll")]
+        public static extern int waveOutSetVolume(IntPtr h, uint dwVolume);
+
+		public static int GetVolume()
+		{
+			uint currentVolume = 0;
+			waveOutGetVolume(IntPtr.Zero, out currentVolume);
+			ushort calcVolume = (ushort)(currentVolume & 0x0000ffff);
+			int volume = calcVolume / (ushort.MaxValue / 10);
+			return volume;
+		}
+
+		public static int SetVolume(int volume) {
+			int newVolume = ((ushort.MaxValue / 10) * volume);
+			uint newVolumeAllChannels = (((uint)newVolume & 0x0000ffff) | ((uint)newVolume << 16));
+			return waveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
+		}
+
+		public bool ismute;
+
         private void windowCommand_AudioMute(object sender, RoutedEventArgs e)
         {
-            try {
-                uint savedVolume;
-                waveOutGetVolume(IntPtr.Zero, out savedVolume);
-
-                if (windowButton_AudioMute.IsChecked == true) {
-                    waveOutSetVolume(IntPtr.Zero, 0);
-                    Debug.WriteLine("IsChecked true");
-                    //isMute = true;
-                } else if (windowButton_AudioMute.IsChecked == false) {
-                    waveOutSetVolume(IntPtr.Zero, savedVolume);
-                    Debug.WriteLine("IsChecked false");
-                    //isMute = false;
-                }
-
+            try
+            {
+                GetVolume();
+                
                 this.MetroWindow.Closing += delegate
                 {
-                    waveOutSetVolume(IntPtr.Zero, savedVolume);
+                    ismute = false;
+					SetVolume(10);
+                    //waveOutSetVolume(IntPtr.Zero, savedVolume);
                 };
+
+                switch(ismute) {
+                    case true:
+						//waveOutSetVolume(IntPtr.Zero, savedVolume);
+						SetVolume(0);
+                        Debug.WriteLine("IsChecked true => false");
+                        ismute = false;
+                        break;
+                    case false:
+						SetVolume(10);
+                        //waveOutSetVolume(IntPtr.Zero, 0);
+                        Debug.WriteLine("IsChecked false => true");
+						ismute = true;
+                        break;
+                }
             }
             catch (Exception ex)
             {
