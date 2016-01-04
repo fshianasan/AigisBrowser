@@ -29,6 +29,7 @@ namespace AigisBrowser
     {
         const string START_URL = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
         const string GAME_URL = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
+		const int SET_VOLUME = 7;
 
         public MainWindow()
         {
@@ -63,7 +64,7 @@ namespace AigisBrowser
 
             this.windowResize(960, 640);
 
-			SetVolume(3);
+			SetVolume(SET_VOLUME);
             getTodayQuestName();
 
             Console.WriteLine("LoadAsync()");
@@ -404,7 +405,7 @@ namespace AigisBrowser
                         ismute = false;
                         break;
                     case false:
-						SetVolume(10);
+						SetVolume(SET_VOLUME);
                         //waveOutSetVolume(IntPtr.Zero, 0);
                         Debug.WriteLine("IsChecked false => true");
 						ismute = true;
