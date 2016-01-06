@@ -29,28 +29,25 @@ namespace AigisBrowser
 			uint newVolumeAllChannels = (((uint)newVolume & 0x0000ffff) | ((uint)newVolume << 16));
 			return waveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
 		}
-
-		public bool isMute()
-		{
-			_mute = true;
-			Debug.WriteLine("_mute true");
-			return _mute;
-		}
-
+		
 		public void toggleMute()
 		{
-			if (_mute == false)
-			{
+			if (_mute == false) {
 				_mute = true;
 				Debug.WriteLine("_mute false => true");
 				return;
 			}
-			else if (_mute == true)
-			{
+			else if (_mute == true) {
 				_mute = false;
 				Debug.WriteLine("_mute true => false");
 				return;
 			}
+		}
+
+		public bool isMute()
+		{
+			_mute = true;
+			return _mute;
 		}
 	}
 }
