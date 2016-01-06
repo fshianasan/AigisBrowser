@@ -13,10 +13,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Diagnostics;
-using System.Windows.Interop;
-using System.Runtime.InteropServices;
-
-using mshtml;
 
 using MahApps.Metro.Controls;
 
@@ -27,34 +23,37 @@ namespace AigisBrowser
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        const string START_URL = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
-        const string GAME_URL = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
-		const int SET_VOLUME = 7;
+		private Audio a;
+
+		private readonly string URL_START = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
+        private readonly string URL_GAME = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
+
+		private int VOLUME_DEFAULT = 6;
 
         public MainWindow()
         {
             InitializeComponent();
 
             //ismute = false;
-            this.webBrowser.Navigate(new Uri(START_URL));
+            this.webBrowser.Navigate(new Uri(URL_START));
             webBrowser.LoadCompleted += WebBrowserOnLoadCompleted;
         }
 
         private void WebBrowserOnLoadCompleted(object sender, NavigationEventArgs e)
         {
-            if (webBrowser.Source == new Uri(GAME_URL))
+            if (webBrowser.Source == new Uri(URL_GAME))
             {
                 LoadAsync();
             }
         }
 
         private async void LoadAsync() {
+			Audio a = new Audio();
             await Task.Run(() => { System.Threading.Thread.Sleep(1500); });
             this.documentChange();
 
             this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
 
-            // 
             this.windowButton_ScreenShot.Visibility = Visibility.Visible;
             this.windowButton_AudioMute.Visibility = Visibility.Visible;
 
@@ -64,7 +63,7 @@ namespace AigisBrowser
 
             this.windowResize(960, 640);
 
-			SetVolume(SET_VOLUME);
+			a.setVolume(VOLUME_DEFAULT);
             getTodayQuestName();
 
             Console.WriteLine("LoadAsync()");
@@ -199,8 +198,6 @@ namespace AigisBrowser
             }
         }
 
-        // サウンドミュート
-
         private void webBrowser_Navigated(object sender, NavigationEventArgs e)
         {
             // statusBar_Address に現在の URL を表示。
@@ -211,7 +208,7 @@ namespace AigisBrowser
         {
             try
             {
-                #region GAME_URLのCSS調整
+                #region URL_GAMEのCSS調整
                 StringBuilder css = new StringBuilder();
                 css.Append("body");
                 css.Append("{");
@@ -360,62 +357,33 @@ namespace AigisBrowser
             // setting.Show();
         }
 
-        // ミュート(テスト)
-        [DllImport("winmm.dll")]
-		public static extern int waveOutGetVolume(IntPtr h, out uint dwVolume);
-
-        [DllImport("winmm.dll")]
-        public static extern int waveOutSetVolume(IntPtr h, uint dwVolume);
-
-		public static int GetVolume()
-		{
-			uint currentVolume = 0;
-			waveOutGetVolume(IntPtr.Zero, out currentVolume);
-			ushort calcVolume = (ushort)(currentVolume & 0x0000ffff);
-			int volume = calcVolume / (ushort.MaxValue / 10);
-			return volume;
-		}
-
-		public static int SetVolume(int volume) {
-			int newVolume = ((ushort.MaxValue / 10) * volume);
-			uint newVolumeAllChannels = (((uint)newVolume & 0x0000ffff) | ((uint)newVolume << 16));
-			return waveOutSetVolume(IntPtr.Zero, newVolumeAllChannels);
-		}
-
-		public bool ismute;
-
         private void windowCommand_AudioMute(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                GetVolume();
-                
-                this.MetroWindow.Closing += delegate
-                {
-                    ismute = false;
-					SetVolume(10);
-                    //waveOutSetVolume(IntPtr.Zero, savedVolume);
-                };
+			try
+			{
+				a.toggleMute();
 
-                switch(ismute) {
-                    case true:
-						//waveOutSetVolume(IntPtr.Zero, savedVolume);
-						SetVolume(0);
-                        Debug.WriteLine("IsChecked true => false");
-                        ismute = false;
-                        break;
-                    case false:
-						SetVolume(SET_VOLUME);
-                        //waveOutSetVolume(IntPtr.Zero, 0);
-                        Debug.WriteLine("IsChecked false => true");
-						ismute = true;
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
-            }
+				switch (a._mute)
+				{
+					case true:
+						a.setVolume(0);
+						Debug.WriteLine("true");
+						break;
+					case false:
+						a.setVolume(VOLUME_DEFAULT);
+						Debug.WriteLine("false");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
+			}
         }
-    }
+
+		private void mainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			a.setVolume(10);
+		}
+	}
 }

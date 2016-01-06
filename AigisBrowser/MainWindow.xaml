@@ -22,7 +22,7 @@
         ResizeMode="CanResizeWithGrip"
                       
         GlowBrush="{DynamicResource AccentColorBrush}"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Closing="mainWindow_Closing">
 
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands>
