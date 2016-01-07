@@ -12,7 +12,7 @@ namespace AigisBrowser
 		[DllImport("winmm.dll")]
 		public static extern int waveOutSetVolume(IntPtr h, uint dwVolume);
 
-		public bool _mute = false;
+		public bool _Mute = false;
 
 		public int getVolume()
 		{
@@ -32,22 +32,22 @@ namespace AigisBrowser
 		
 		public void toggleMute()
 		{
-			if (_mute == false) {
-				_mute = true;
-				Debug.WriteLine("_mute false => true");
+			if (_Mute == false) {
+				_Mute = true;
+				Debug.WriteLine("_Mute false => true");
 				return;
 			}
-			else if (_mute == true) {
-				_mute = false;
-				Debug.WriteLine("_mute true => false");
+			else if (_Mute == true) {
+				_Mute = false;
+				Debug.WriteLine("_Mute true => false");
 				return;
 			}
 		}
 
 		public bool isMute()
 		{
-			_mute = true;
-			return _mute;
+			_Mute = true;
+			return _Mute;
 		}
 	}
 }

@@ -26,17 +26,22 @@ namespace AigisBrowser
 		private readonly string URL_START = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
         private readonly string URL_GAME = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
 
+		private readonly string URL_START_R18 = "http://www.dmm.co.jp/lp/game/aigis/index012.html/=/navi=none/";
+		private readonly string URL_GAME_R18 = "http://www.dmm.co.jp/netgame/social/-/gadgets/=/app_id=156462/";
+
 		private int VOLUME_DEFAULT = 6;
 
 		private Audio a = new Audio();
-		private System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
+		System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
 
-        public MainWindow()
+		public MainWindow()
         {
-            InitializeComponent();
+			InitializeComponent();
 
             this.webBrowser.Navigate(new Uri(URL_START));
             webBrowser.LoadCompleted += WebBrowserOnLoadCompleted;
+
+			Debug.WriteLine(App.ResourceAssembly.GetName().ToString());
 		}
 
         private void WebBrowserOnLoadCompleted(object sender, NavigationEventArgs e)
@@ -136,7 +141,7 @@ namespace AigisBrowser
 
         private void takeScreenShot()
         {
-            try
+			try
             {
                 if (this.webBrowser.Document == null) return;
 
@@ -174,8 +179,8 @@ namespace AigisBrowser
                     enc.Frames.Add(BitmapFrame.Create(rtb));
                     enc.Save(fs);
 
-                    // MessageBox
-                    string msg = string.Format("スクリーンショット撮影に成功しました。\n\n保存場所：{0}\n\n保存したスクリーンショットを開きますか？", filePath);
+					// MessageBox
+					//string msg = string.Format("スクリーンショット撮影に成功しました。\n\n保存場所：{0}\n\n保存したスクリーンショットを開きますか？", filePath);
 
 					// スクリーンショットの画像を開くかどうか
 					/* MessageBoxResult result = MessageBox.Show(msg, MetroWindow.Title, MessageBoxButton.YesNo, MessageBoxImage.Information);
@@ -193,20 +198,14 @@ namespace AigisBrowser
 					_notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 					_notifyIcon.BalloonTipTitle = "スクリーンショット撮影に成功！";
 					_notifyIcon.BalloonTipText = string.Format("{0}", fileName);
-					_notifyIcon.ShowBalloonTip(1500);
-					
-					_notifyIcon.BalloonTipClicked += delegate
-					{
-						System.Diagnostics.Process.Start(filePath);
-						_notifyIcon.Visible = false;
-					};
-					
+					_notifyIcon.ShowBalloonTip(1000);
+
                     Debug.WriteLine("takeScreenShot()");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("スクリーンショット撮影に失敗しました。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("スクリーンショット撮影に失敗しました。\n\n" + ex, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Debug.WriteLine("Exception: {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message);
             }
         }
@@ -376,11 +375,11 @@ namespace AigisBrowser
 			{
 				a.toggleMute();
 
-				switch (a._mute)
+				switch (a._Mute)
 				{
 					case true:
 						a.setVolume(0);
-						Debug.WriteLine(a._mute.ToString());
+						Debug.WriteLine(a._Mute.ToString());
 						break;
 					case false:
 						a.setVolume(VOLUME_DEFAULT);
@@ -397,14 +396,14 @@ namespace AigisBrowser
 		// 終了処理
 		private void mainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			if (MessageBox.Show("終了してもよろしいですか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+			if (MessageBox.Show("終了してもよろしいですか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Asterisk) == MessageBoxResult.No)
 			{
 				e.Cancel = true;
-			} else {
-				a.setVolume(10);
-				_notifyIcon.Visible = false;
-				_notifyIcon.Dispose();
 			}
+
+			a.setVolume(10);
+			_notifyIcon.Visible = false;
+			_notifyIcon.Dispose();
 		}
 	}
 }

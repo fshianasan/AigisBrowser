@@ -16,7 +16,7 @@
         MinWidth="1100"
         MinHeight="768"
         
-        Icon="C:\Users\fshianer\Documents\Visual Studio 2015\Projects\AigisBrowser\AigisBrowser\Resources\icon.png"
+        Icon="pack://application:,,,/AigisBrowser;component/Resources/icon.ico"
         ShowIconOnTitleBar="True"
                       
         ResizeMode="CanResizeWithGrip"
