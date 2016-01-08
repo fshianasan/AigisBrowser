@@ -107,6 +107,20 @@
                 </StackPanel>
             </Button>
 
+            <!-- WebBrowser Refresh -->
+            <Button x:Name="windowButton_Refresh" ToolTip="ブラウザーを再読み込みします"
+                    Click="windowCommand_Refresh" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_refresh}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
+
             <!-- Screenshot -->
             <Button x:Name="windowButton_ScreenShot" ToolTip="スクリーンショット撮影"
                     Click="windowCommand_ScreenShot" Visibility="Collapsed">

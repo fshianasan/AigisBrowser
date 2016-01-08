@@ -26,8 +26,8 @@ namespace AigisBrowser
 		private readonly string URL_START = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
         private readonly string URL_GAME = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
 
-		private readonly string URL_START_R18 = "http://www.dmm.co.jp/lp/game/aigis/index012.html/=/navi=none/";
-		private readonly string URL_GAME_R18 = "http://www.dmm.co.jp/netgame/social/-/gadgets/=/app_id=156462/";
+		// private readonly string URL_START_R18 = "http://www.dmm.co.jp/lp/game/aigis/index012.html/=/navi=none/";
+		// private readonly string URL_GAME_R18 = "http://www.dmm.co.jp/netgame/social/-/gadgets/=/app_id=156462/";
 
 		private int VOLUME_DEFAULT = 6;
 
@@ -40,8 +40,6 @@ namespace AigisBrowser
 
             this.webBrowser.Navigate(new Uri(URL_START));
             webBrowser.LoadCompleted += WebBrowserOnLoadCompleted;
-
-			Debug.WriteLine(App.ResourceAssembly.GetName().ToString());
 		}
 
         private void WebBrowserOnLoadCompleted(object sender, NavigationEventArgs e)
@@ -59,6 +57,7 @@ namespace AigisBrowser
             this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
 
 			// windowButton の表示切替
+			this.windowButton_Refresh.Visibility = Visibility.Visible;
             this.windowButton_ScreenShot.Visibility = Visibility.Visible;
             this.windowButton_AudioMute.Visibility = Visibility.Visible;
 
@@ -192,6 +191,7 @@ namespace AigisBrowser
                             break;
                     }*/
 
+					// 本当は BalloonTipClicked で画像を開きたいけど処理の書き方がわからない
 					_notifyIcon.Icon = new System.Drawing.Icon(@"C:\Users\fshianer\Documents\Visual Studio 2015\Projects\AigisBrowser\AigisBrowser\Resources\icon.ico");
 					_notifyIcon.Visible = true;
 
@@ -404,6 +404,22 @@ namespace AigisBrowser
 			a.setVolume(10);
 			_notifyIcon.Visible = false;
 			_notifyIcon.Dispose();
+		}
+
+		// webBrowser の再読み込み
+		private void windowCommand_Refresh(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				if (MessageBox.Show("ブラウザーの再読み込みしてもよろしいですか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Asterisk) == MessageBoxResult.Yes)
+				{
+					this.webBrowser.Refresh();
+				}
+			}
+			catch
+			{
+
+			}
 		}
 	}
 }
