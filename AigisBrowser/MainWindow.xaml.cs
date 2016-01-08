@@ -25,11 +25,11 @@ namespace AigisBrowser
     {
 		private readonly string URL_START = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
         private readonly string URL_GAME = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
-
+		
 		// private readonly string URL_START_R18 = "http://www.dmm.co.jp/lp/game/aigis/index012.html/=/navi=none/";
 		// private readonly string URL_GAME_R18 = "http://www.dmm.co.jp/netgame/social/-/gadgets/=/app_id=156462/";
 
-		private int VOLUME_DEFAULT = 6;
+		private int VOLUME_DEFAULT = 7;
 
 		private Audio a = new Audio();
 		System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
@@ -40,6 +40,10 @@ namespace AigisBrowser
 
             this.webBrowser.Navigate(new Uri(URL_START));
             webBrowser.LoadCompleted += WebBrowserOnLoadCompleted;
+
+			_notifyIcon.Text = MetroWindow.Title;
+			_notifyIcon.Icon = new System.Drawing.Icon(@"C:\Users\fshianer\Documents\Visual Studio 2015\Projects\AigisBrowser\AigisBrowser\Resources\icon.ico");
+			_notifyIcon.Visible = true;
 		}
 
         private void WebBrowserOnLoadCompleted(object sender, NavigationEventArgs e)
@@ -192,9 +196,6 @@ namespace AigisBrowser
                     }*/
 
 					// 本当は BalloonTipClicked で画像を開きたいけど処理の書き方がわからない
-					_notifyIcon.Icon = new System.Drawing.Icon(@"C:\Users\fshianer\Documents\Visual Studio 2015\Projects\AigisBrowser\AigisBrowser\Resources\icon.ico");
-					_notifyIcon.Visible = true;
-
 					_notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 					_notifyIcon.BalloonTipTitle = "スクリーンショット撮影に成功！";
 					_notifyIcon.BalloonTipText = string.Format("{0}", fileName);
@@ -252,6 +253,7 @@ namespace AigisBrowser
                 if (div03 != null) div03.style.display = "none";
                 if (div04 != null) div04.style.display = "none";
 
+				// 正直ここから要らないのかもしれない
                 // game_frame
                 var iframe_game = document.frames.item(0) as mshtml.HTMLWindow2;
                 var document_game = iframe_game.document as mshtml.HTMLDocument;
@@ -277,7 +279,7 @@ namespace AigisBrowser
                 
                 // MetroWindow の最小値のリサイズ
                 this.MetroWindow.MinWidth = width;
-                this.MetroWindow.MinHeight = height + 54;
+                this.MetroWindow.MinHeight = height + 52;
 
                 // webBrowser のリサイズ
                 this.webBrowser.Width = width;
@@ -285,7 +287,7 @@ namespace AigisBrowser
 
                 // MainWindow のリサイズ
                 this.MetroWindow.Width = width;
-                this.MetroWindow.Height = height + 54; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。}               
+                this.MetroWindow.Height = height + 52; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。}               
 
                 // http://stackoverflow.com/questions/4019831/how-do-you-center-your-main-window-in-wpf
                 Rect workArea = System.Windows.SystemParameters.WorkArea;
@@ -326,7 +328,7 @@ namespace AigisBrowser
 
             DateTime dt = DateTime.Now;
             
-            statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】{0} / {1}",
+            statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】 {0} / {1}",
                 questName[(int)dt.DayOfWeek],
                 questName2[(int)dt.DayOfWeek]
             );
