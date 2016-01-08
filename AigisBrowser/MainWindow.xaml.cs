@@ -38,8 +38,7 @@ namespace AigisBrowser
         {
 			InitializeComponent();
 
-            this.webBrowser.Navigate(new Uri(URL_START));
-            webBrowser.LoadCompleted += WebBrowserOnLoadCompleted;
+            // this.webBrowser.Navigate(new Uri(URL_START));
 
 			_notifyIcon.Text = MetroWindow.Title;
 			_notifyIcon.Icon = new System.Drawing.Icon(@"C:\Users\fshianer\Documents\Visual Studio 2015\Projects\AigisBrowser\AigisBrowser\Resources\icon.ico");
@@ -134,7 +133,12 @@ namespace AigisBrowser
         {
             try
             {
-                this.takeScreenShot();
+				string fileName = string.Format("Aigis-{0}.{1}", DateTime.Now.ToString("yyMMdd-HHmmss"), "png");
+				string directoryPath = string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots");
+				if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
+				string filePath = Path.Combine(directoryPath, fileName);
+
+				takeScreenShot(fileName, filePath);
                 Debug.WriteLine("windowsCommand_ScreenShot()");
             }
             catch {
@@ -142,7 +146,7 @@ namespace AigisBrowser
             }
         }
 
-        private void takeScreenShot()
+        private void takeScreenShot(string Name, string Path)
         {
 			try
             {
@@ -154,12 +158,7 @@ namespace AigisBrowser
                 imgScreen.Height = (int)this.webBrowser.ActualHeight;
                 imgScreen.Source = new DrawingImage(VisualTreeHelper.GetDrawing(this.webBrowser));
 
-                string fileName = string.Format("Aigis-{0}.{1}", DateTime.Now.ToString("yyMMdd-HHmmss"), "png");
-                string directoryPath = string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots");
-                if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
-                string filePath = Path.Combine(directoryPath, fileName);
-
-                using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (FileStream fs = new FileStream(Path, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     var vis = new DrawingVisual();
                     DrawingContext cont = vis.RenderOpen();
@@ -198,7 +197,7 @@ namespace AigisBrowser
 					// 本当は BalloonTipClicked で画像を開きたいけど処理の書き方がわからない
 					_notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 					_notifyIcon.BalloonTipTitle = "スクリーンショット撮影に成功！";
-					_notifyIcon.BalloonTipText = string.Format("{0}", fileName);
+					_notifyIcon.BalloonTipText = string.Format("{0}", Name);
 					_notifyIcon.ShowBalloonTip(1000);
 
                     Debug.WriteLine("takeScreenShot()");
@@ -215,7 +214,9 @@ namespace AigisBrowser
         {
             // statusBar_Address に現在の URL を表示。
             statusBar_Address.Text = webBrowser.Source.ToString();
-        }
+
+			webBrowser.LoadCompleted += WebBrowserOnLoadCompleted;
+		}
 
         private void documentChange()
         {
@@ -381,11 +382,11 @@ namespace AigisBrowser
 				{
 					case true:
 						a.setVolume(0);
-						Debug.WriteLine(a._Mute.ToString());
+						Debug.WriteLine("Mute: false => true");
 						break;
 					case false:
 						a.setVolume(VOLUME_DEFAULT);
-						Debug.WriteLine("false");
+						Debug.WriteLine("Mute: true => false");
 						break;
 				}
 			}
@@ -395,7 +396,7 @@ namespace AigisBrowser
 			}
         }
 
-		// 終了処理
+		// MainWindow の終了処理
 		private void mainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			if (MessageBox.Show("終了してもよろしいですか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Asterisk) == MessageBoxResult.No)
@@ -404,6 +405,7 @@ namespace AigisBrowser
 			}
 
 			a.setVolume(10);
+
 			_notifyIcon.Visible = false;
 			_notifyIcon.Dispose();
 		}
@@ -415,7 +417,7 @@ namespace AigisBrowser
 			{
 				if (MessageBox.Show("ブラウザーの再読み込みしてもよろしいですか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Asterisk) == MessageBoxResult.Yes)
 				{
-					this.webBrowser.Refresh();
+					webBrowser.Refresh();
 				}
 			}
 			catch

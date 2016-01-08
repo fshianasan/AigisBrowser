@@ -43,8 +43,9 @@
 
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <!-- Settings -->
-            <Button ToolTip="設定を開きます" Click="windowCommand_Settings">
+            <!-- Settings とりあえず非表示 -->
+            <Button x:Name="windowButton_Settings" Visibility="Hidden"
+                    ToolTip="設定を開きます" Click="windowCommand_Settings">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
@@ -174,6 +175,7 @@
             
             <!-- webBrowser -->
             <WebBrowser x:Name="webBrowser"
+                        Source="{Binding URL_START}"
                         Navigated="webBrowser_Navigated"
                         AllowDrop="False" />
             <!-- /webBrowser -->
