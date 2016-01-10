@@ -43,8 +43,8 @@
 
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <!-- Settings とりあえず非表示 -->
-            <Button x:Name="windowButton_Settings" Visibility="Hidden"
+            <!-- Settings
+            <Button x:Name="windowButton_Settings"
                     ToolTip="設定を開きます" Click="windowCommand_Settings">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
@@ -58,6 +58,27 @@
                                VerticalAlignment="Center"
                                Text="設定"/>
                 </StackPanel>
+            </Button> -->
+            
+            <!-- Select Normal/R18 -->
+            <Button Name="windowButton_SelectMenu" Click="menuButton_Click" ToolTip="一般版とR18版の切り替え"
+                    ContextMenuService.IsEnabled="False">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_tools}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="設定" />
+                </StackPanel>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="一般版" />
+                        <MenuItem Header="R18版" />
+                    </ContextMenu>
+                </Button.ContextMenu>
             </Button>
 
             <!-- Twitter -->
@@ -153,32 +174,34 @@
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
 
-    <Grid>
-        <DockPanel>
-            <!-- StatusBar -->
-            <StatusBar x:Name="statusBar"
-                       DockPanel.Dock="Bottom"
-                       HorizontalAlignment="Stretch">
+    <Controls:MetroContentControl>
+        <Grid>
+            <DockPanel>
+                <!-- StatusBar -->
+                <StatusBar x:Name="statusBar"
+                           DockPanel.Dock="Bottom"
+                           HorizontalAlignment="Stretch">
 
-                <!-- statuBar_Address URL 表示 -->
-                <StatusBarItem x:Name="statusBarItem_Address">
-                    <TextBlock x:Name="statusBar_Address" />
-                </StatusBarItem>
+                    <!-- statuBar_Address URL 表示 -->
+                    <StatusBarItem x:Name="statusBarItem_Address">
+                        <TextBlock x:Name="statusBar_Address" />
+                    </StatusBarItem>
 
-                <!-- statusBar_TodayQuestName 曜日限定クエストの表示 -->
-                <StatusBarItem x:Name="statusBarItem_TodayQuestName"
-            		Visibility="Hidden">
-                    <TextBlock x:Name="statusBar_TodayQuestName" />
-                </StatusBarItem>
-            </StatusBar>
-            <!-- /StatusBar -->
-            
-            <!-- webBrowser -->
-            <WebBrowser x:Name="webBrowser"
-                        Source="{Binding URL_START}"
-                        Navigated="webBrowser_Navigated"
-                        AllowDrop="False" />
-            <!-- /webBrowser -->
-        </DockPanel>
-    </Grid>
+                    <!-- statusBar_TodayQuestName 曜日限定クエストの表示 -->
+                    <StatusBarItem x:Name="statusBarItem_TodayQuestName"
+            		               Visibility="Hidden">
+                        <TextBlock x:Name="statusBar_TodayQuestName" />
+                    </StatusBarItem>
+                </StatusBar>
+                <!-- /StatusBar -->
+
+                <!-- webBrowser -->
+                <WebBrowser x:Name="webBrowser"
+                            Source="about:blank"
+                            Navigated="webBrowser_Navigated"
+                            AllowDrop="False" LoadCompleted="webBrowser_LoadCompleted" />
+                <!-- /webBrowser -->
+            </DockPanel>
+        </Grid>
+    </Controls:MetroContentControl>
 </Controls:MetroWindow>

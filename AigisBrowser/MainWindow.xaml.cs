@@ -24,12 +24,12 @@ namespace AigisBrowser
     public partial class MainWindow : MetroWindow
     {
 		private readonly string URL_START = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
-        private readonly string URL_GAME = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
+		private readonly string URL_GAME = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
 		
 		// private readonly string URL_START_R18 = "http://www.dmm.co.jp/lp/game/aigis/index012.html/=/navi=none/";
 		// private readonly string URL_GAME_R18 = "http://www.dmm.co.jp/netgame/social/-/gadgets/=/app_id=156462/";
 
-		private int VOLUME_DEFAULT = 7;
+		// private int VOLUME_DEFAULT = 7;
 
 		private Audio a = new Audio();
 		System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
@@ -38,28 +38,20 @@ namespace AigisBrowser
         {
 			InitializeComponent();
 
-            // this.webBrowser.Navigate(new Uri(URL_START));
+			this.webBrowser.Navigate(new Uri(URL_START));
 
 			_notifyIcon.Text = MetroWindow.Title;
 			_notifyIcon.Icon = new System.Drawing.Icon(@"C:\Users\fshianer\Documents\Visual Studio 2015\Projects\AigisBrowser\AigisBrowser\Resources\icon.ico");
 			_notifyIcon.Visible = true;
 		}
 
-        private void WebBrowserOnLoadCompleted(object sender, NavigationEventArgs e)
-        {
-            if (webBrowser.Source == new Uri(URL_GAME))
-            {
-                LoadAsync();
-            }
-        }
-
         private async void LoadAsync() {
-			await Task.Run(() => { System.Threading.Thread.Sleep(1500); });
-            this.documentChange();
+			await Task.Run(() => { System.Threading.Thread.Sleep(2000); });
 
             this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
 
 			// windowButton の表示切替
+			this.windowButton_SelectMenu.Visibility = Visibility.Hidden;
 			this.windowButton_Refresh.Visibility = Visibility.Visible;
             this.windowButton_ScreenShot.Visibility = Visibility.Visible;
             this.windowButton_AudioMute.Visibility = Visibility.Visible;
@@ -67,69 +59,70 @@ namespace AigisBrowser
             // ステータスバーの表示切り替え
             this.statusBarItem_Address.Visibility = Visibility.Collapsed;
             this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
-
+			
+			this.documentChange();
             this.windowResize(960, 640);
 
-			a.setVolume(VOLUME_DEFAULT);
             getTodayQuestName();
-
-            Console.WriteLine("LoadAsync()");
         }
 
-        // Githubを開く
-        private void windowCommand_Github(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                System.Diagnostics.Process.Start("https://github.com/fshianasan/AigisBrowser");
-            }
-            catch
-            {
+		#region <Controls:MetroWindow.LeftWindowCommands>
 
-            }
+		// Githubを開く
+		private void windowCommand_Github(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/fshianasan/AigisBrowser");
         }
 
-        // DMM公式コミュニティを開く
-        private void windowCommand_Community(object sender, RoutedEventArgs e)
-        {
-            try {
-                System.Diagnostics.Process.Start("http://www.dmm.com/netgame/community/-/topic/detail/=/cid=1510/tid=14590/");
-            }
-            catch
-            {
+		#endregion </Controls:MetroWindow.LeftWindowCommands>
 
-            }
-            
+		#region <Controls:MetroWindow.RightWindowCommands>
+
+		// 設定(テスト)
+		private void windowCommand_Settings(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("申し訳ありませんが未実装です。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+
+			// Settings setting = new Settings();
+			// setting.Show();
+		}
+
+		// DMM公式コミュニティを開く
+		private void windowCommand_Community(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://www.dmm.com/netgame/community/-/topic/detail/=/cid=1510/tid=14590/");
         }
 
         // Twitterを開く
         private void windowCommand_Twitter(object sender, RoutedEventArgs e)
         {
-            try {
-                System.Diagnostics.Process.Start("https://twitter.com/Aigis1000/");
-            }
-            catch
-            {
-
-            }
-            
+            System.Diagnostics.Process.Start("https://twitter.com/Aigis1000/");
         }
         
         // Wikiを開く
         private void windowCommand_Wiki(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                System.Diagnostics.Process.Start("http://aigis.gcwiki.info/");
-            }
-            catch
-            {
-
-            }
+            System.Diagnostics.Process.Start("http://aigis.gcwiki.info/");
         }
 
-        // スクリーンショット撮影
-        private void windowCommand_ScreenShot(object sender, RoutedEventArgs e)
+		// webBrowser の再読み込み
+		private void windowCommand_Refresh(object sender, RoutedEventArgs e)
+		{
+			if (MessageBox.Show("ブラウザーの再読み込みしてもよろしいですか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Asterisk) == MessageBoxResult.Yes)
+			{
+				WebBrowserRefreshed();
+			}
+		}
+
+		//
+		private void WebBrowserRefreshed()
+		{
+			webBrowser.Refresh();
+			LoadAsync();
+		}
+
+		// スクリーンショット撮影
+		private void windowCommand_ScreenShot(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -144,9 +137,36 @@ namespace AigisBrowser
             catch {
 
             }
-        }
+		}
 
-        private void takeScreenShot(string Name, string Path)
+		// ミュート
+		private void windowCommand_AudioMute(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				a.toggleMute();
+
+				/*switch (a._isMute)
+				{
+					case true:
+						a.setVolume(0);
+						Debug.WriteLine("Mute: false => true");
+						break;
+					case false:
+						a.setVolume(VOLUME_DEFAULT);
+						Debug.WriteLine("Mute: true => false");
+						break;
+				}*/
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
+			}
+		}
+
+		#endregion </Controls:MetroWindow.RightWindowCommands>
+
+		private void takeScreenShot(string Name, string Path)
         {
 			try
             {
@@ -181,26 +201,10 @@ namespace AigisBrowser
                     enc.Frames.Add(BitmapFrame.Create(rtb));
                     enc.Save(fs);
 
-					// MessageBox
-					//string msg = string.Format("スクリーンショット撮影に成功しました。\n\n保存場所：{0}\n\n保存したスクリーンショットを開きますか？", filePath);
-
-					// スクリーンショットの画像を開くかどうか
-					/* MessageBoxResult result = MessageBox.Show(msg, MetroWindow.Title, MessageBoxButton.YesNo, MessageBoxImage.Information);
-					switch (result) {
-                        case MessageBoxResult.Yes:
-                            System.Diagnostics.Process.Start(filePath);
-                            break;
-                        case MessageBoxResult.No:
-                            break;
-                    }*/
-
 					// 本当は BalloonTipClicked で画像を開きたいけど処理の書き方がわからない
-					_notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 					_notifyIcon.BalloonTipTitle = "スクリーンショット撮影に成功！";
 					_notifyIcon.BalloonTipText = string.Format("{0}", Name);
 					_notifyIcon.ShowBalloonTip(1000);
-
-                    Debug.WriteLine("takeScreenShot()");
                 }
             }
             catch (Exception ex)
@@ -210,12 +214,16 @@ namespace AigisBrowser
             }
         }
 
-        private void webBrowser_Navigated(object sender, NavigationEventArgs e)
+		public void ToggleMute()
+		{
+			if (this.a == null) { return; }
+			this.a.toggleMute();
+		}
+
+		private void webBrowser_Navigated(object sender, NavigationEventArgs e)
         {
             // statusBar_Address に現在の URL を表示。
             statusBar_Address.Text = webBrowser.Source.ToString();
-
-			webBrowser.LoadCompleted += WebBrowserOnLoadCompleted;
 		}
 
         private void documentChange()
@@ -254,7 +262,7 @@ namespace AigisBrowser
                 if (div03 != null) div03.style.display = "none";
                 if (div04 != null) div04.style.display = "none";
 
-				// 正直ここから要らないのかもしれない
+				/* 正直ここから要らないのかもしれない
                 // game_frame
                 var iframe_game = document.frames.item(0) as mshtml.HTMLWindow2;
                 var document_game = iframe_game.document as mshtml.HTMLDocument;
@@ -264,7 +272,7 @@ namespace AigisBrowser
                 var document_aigis = iframe_aigis.document as mshtml.HTMLDocument;
 
                 var div11 = document_aigis.getElementById("main_frame");
-                if (div11 != null) div11.style.display = "none";
+                if (div11 != null) div11.style.display = "none"; */
             }
             catch (Exception ex)
             {
@@ -363,39 +371,6 @@ namespace AigisBrowser
             }
         }
 
-        // 設定(テスト)
-        private void windowCommand_Settings(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("申し訳ありませんが未実装です。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
-
-            // Settings setting = new Settings();
-            // setting.Show();
-        }
-		
-        private void windowCommand_AudioMute(object sender, RoutedEventArgs e)
-        {
-			try
-			{
-				a.toggleMute();
-
-				switch (a._Mute)
-				{
-					case true:
-						a.setVolume(0);
-						Debug.WriteLine("Mute: false => true");
-						break;
-					case false:
-						a.setVolume(VOLUME_DEFAULT);
-						Debug.WriteLine("Mute: true => false");
-						break;
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
-			}
-        }
-
 		// MainWindow の終了処理
 		private void mainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
@@ -410,20 +385,21 @@ namespace AigisBrowser
 			_notifyIcon.Dispose();
 		}
 
-		// webBrowser の再読み込み
-		private void windowCommand_Refresh(object sender, RoutedEventArgs e)
+		private void webBrowser_LoadCompleted(object sender, NavigationEventArgs e)
 		{
-			try
+			if (webBrowser.Source == new Uri(URL_GAME))
 			{
-				if (MessageBox.Show("ブラウザーの再読み込みしてもよろしいですか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Asterisk) == MessageBoxResult.Yes)
-				{
-					webBrowser.Refresh();
-				}
+				LoadAsync();
 			}
-			catch
-			{
+		}
 
-			}
+		// https://dotnetlearning.wordpress.com/2011/02/20/dropdown-menu-in-wpf/
+		private void menuButton_Click(object sender, RoutedEventArgs e)
+		{
+			(sender as Button).ContextMenu.IsEnabled = true;
+			(sender as Button).ContextMenu.PlacementTarget = (sender as Button);
+			(sender as Button).ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+			(sender as Button).ContextMenu.IsOpen = true;
 		}
 	}
 }
