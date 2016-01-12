@@ -38,6 +38,12 @@
                     </Rectangle>
                 </StackPanel>
             </Button>
+            
+            <!-- Debug -->
+            <Button Click="Button_Click" ToolTip="Debug用">
+                <TextBlock VerticalAlignment="Center"
+                           Text="Debug" />
+            </Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.LeftWindowCommands>
 

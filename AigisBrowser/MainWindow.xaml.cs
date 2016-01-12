@@ -18,10 +18,10 @@ using MahApps.Metro.Controls;
 
 namespace AigisBrowser
 {
-    /// <summary>
-    /// MainWindow.xaml の相互作用ロジック
-    /// </summary>
-    public partial class MainWindow : MetroWindow
+	/// <summary>
+	/// MainWindow.xaml の相互作用ロジック
+	/// </summary>
+	public partial class MainWindow : MetroWindow
     {
 		private readonly string URL_START = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
 		private readonly string URL_GAME = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
@@ -32,17 +32,13 @@ namespace AigisBrowser
 		// private int VOLUME_DEFAULT = 7;
 
 		private Audio a = new Audio();
-		System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
+		private NotifyIconWrapper _notifyIcon = new NotifyIconWrapper();
 
 		public MainWindow()
         {
 			InitializeComponent();
 
 			this.webBrowser.Navigate(new Uri(URL_START));
-
-			_notifyIcon.Text = MetroWindow.Title;
-			_notifyIcon.Icon = new System.Drawing.Icon(@"C:\Users\fshianer\Documents\Visual Studio 2015\Projects\AigisBrowser\AigisBrowser\Resources\icon.ico");
-			_notifyIcon.Visible = true;
 		}
 
         private async void LoadAsync() {
@@ -74,7 +70,7 @@ namespace AigisBrowser
             System.Diagnostics.Process.Start("https://github.com/fshianasan/AigisBrowser");
         }
 
-		#endregion </Controls:MetroWindow.LeftWindowCommands>
+		#endregion
 
 		#region <Controls:MetroWindow.RightWindowCommands>
 
@@ -82,9 +78,6 @@ namespace AigisBrowser
 		private void windowCommand_Settings(object sender, RoutedEventArgs e)
 		{
 			MessageBox.Show("申し訳ありませんが未実装です。", MetroWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
-
-			// Settings setting = new Settings();
-			// setting.Show();
 		}
 
 		// DMM公式コミュニティを開く
@@ -124,19 +117,12 @@ namespace AigisBrowser
 		// スクリーンショット撮影
 		private void windowCommand_ScreenShot(object sender, RoutedEventArgs e)
         {
-            try
-            {
-				string fileName = string.Format("Aigis-{0}.{1}", DateTime.Now.ToString("yyMMdd-HHmmss"), "png");
-				string directoryPath = string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots");
-				if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
-				string filePath = Path.Combine(directoryPath, fileName);
+			string fileName = string.Format("Aigis-{0}.{1}", DateTime.Now.ToString("yyMMdd-HHmmss"), "png");
+			string directoryPath = string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots");
+			if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
+			string filePath = Path.Combine(directoryPath, fileName);
 
-				takeScreenShot(fileName, filePath);
-                Debug.WriteLine("windowsCommand_ScreenShot()");
-            }
-            catch {
-
-            }
+			takeScreenShot(fileName, filePath);
 		}
 
 		// ミュート
@@ -145,18 +131,6 @@ namespace AigisBrowser
 			try
 			{
 				a.toggleMute();
-
-				/*switch (a._isMute)
-				{
-					case true:
-						a.setVolume(0);
-						Debug.WriteLine("Mute: false => true");
-						break;
-					case false:
-						a.setVolume(VOLUME_DEFAULT);
-						Debug.WriteLine("Mute: true => false");
-						break;
-				}*/
 			}
 			catch (Exception ex)
 			{
@@ -164,7 +138,7 @@ namespace AigisBrowser
 			}
 		}
 
-		#endregion </Controls:MetroWindow.RightWindowCommands>
+		#endregion
 
 		private void takeScreenShot(string Name, string Path)
         {
@@ -202,23 +176,15 @@ namespace AigisBrowser
                     enc.Save(fs);
 
 					// 本当は BalloonTipClicked で画像を開きたいけど処理の書き方がわからない
-					_notifyIcon.BalloonTipTitle = "スクリーンショット撮影に成功！";
-					_notifyIcon.BalloonTipText = string.Format("{0}", Name);
-					_notifyIcon.ShowBalloonTip(1000);
-                }
-            }
+					_notifyIcon.Show("スクリーンショット撮影に成功！", string.Format("{0}", Name));
+				}
+			}
             catch (Exception ex)
             {
                 MessageBox.Show("スクリーンショット撮影に失敗しました。\n\n" + ex, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Debug.WriteLine("Exception: {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message);
             }
         }
-
-		public void ToggleMute()
-		{
-			if (this.a == null) { return; }
-			this.a.toggleMute();
-		}
 
 		private void webBrowser_Navigated(object sender, NavigationEventArgs e)
         {
@@ -230,7 +196,7 @@ namespace AigisBrowser
         {
             try
             {
-                #region URL_GAMEのCSS調整
+                #region CSS調整
                 StringBuilder css = new StringBuilder();
                 css.Append("body");
                 css.Append("{");
@@ -379,9 +345,6 @@ namespace AigisBrowser
 				e.Cancel = true;
 			}
 
-			a.setVolume(10);
-
-			_notifyIcon.Visible = false;
 			_notifyIcon.Dispose();
 		}
 
@@ -400,6 +363,11 @@ namespace AigisBrowser
 			(sender as Button).ContextMenu.PlacementTarget = (sender as Button);
 			(sender as Button).ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
 			(sender as Button).ContextMenu.IsOpen = true;
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			_notifyIcon.Show("でぱでぱ", "Debug");
 		}
 	}
 }
