@@ -31,13 +31,13 @@ namespace AigisBrowser
 
 		// private int VOLUME_DEFAULT = 7;
 
+		private NotifyIconWrapper notifyIcon = new NotifyIconWrapper();
 		private Audio a = new Audio();
-		private NotifyIconWrapper _notifyIcon = new NotifyIconWrapper();
 
 		public MainWindow()
         {
 			InitializeComponent();
-
+			
 			this.webBrowser.Navigate(new Uri(URL_START));
 		}
 
@@ -47,7 +47,7 @@ namespace AigisBrowser
             this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
 
 			// windowButton の表示切替
-			this.windowButton_SelectMenu.Visibility = Visibility.Hidden;
+			// this.windowButton_SelectMenu.Visibility = Visibility.Hidden;
 			this.windowButton_Refresh.Visibility = Visibility.Visible;
             this.windowButton_ScreenShot.Visibility = Visibility.Visible;
             this.windowButton_AudioMute.Visibility = Visibility.Visible;
@@ -62,6 +62,56 @@ namespace AigisBrowser
             getTodayQuestName();
         }
 
+		#region Debug
+
+		//#if DEBUG
+		// https://dotnetlearning.wordpress.com/2011/02/20/dropdown-menu-in-wpf/
+		private void menuButton2_Click(object sender, RoutedEventArgs e)
+		{
+			(sender as Button).ContextMenu.IsEnabled = true;
+			(sender as Button).ContextMenu.PlacementTarget = (sender as Button);
+			(sender as Button).ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+			(sender as Button).ContextMenu.IsOpen = true;
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			notifyIcon.Show("でぱでぱ", "Debug");
+		}
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			Window1 w1 = new Window1();
+			w1.Show();
+		}
+		//#endif
+
+		#endregion
+
+		#region WebBrowser
+
+		private void webBrowser_LoadCompleted(object sender, NavigationEventArgs e)
+		{
+			if (webBrowser.Source == new Uri(URL_GAME))
+			{
+				LoadAsync();
+			}
+		}
+
+		private void webBrowser_Navigated(object sender, NavigationEventArgs e)
+		{
+			// statusBar_Address に現在の URL を表示。
+			statusBar_Address.Text = webBrowser.Source.ToString();
+		}
+
+		private void WebBrowserRefreshed()
+		{
+			webBrowser.Refresh();
+			LoadAsync();
+		}
+
+		#endregion
+
 		#region <Controls:MetroWindow.LeftWindowCommands>
 
 		// Githubを開く
@@ -73,6 +123,15 @@ namespace AigisBrowser
 		#endregion
 
 		#region <Controls:MetroWindow.RightWindowCommands>
+
+		// https://dotnetlearning.wordpress.com/2011/02/20/dropdown-menu-in-wpf/
+		private void menuButton_Click(object sender, RoutedEventArgs e)
+		{
+			(sender as Button).ContextMenu.IsEnabled = true;
+			(sender as Button).ContextMenu.PlacementTarget = (sender as Button);
+			(sender as Button).ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+			(sender as Button).ContextMenu.IsOpen = true;
+		}
 
 		// 設定(テスト)
 		private void windowCommand_Settings(object sender, RoutedEventArgs e)
@@ -105,13 +164,6 @@ namespace AigisBrowser
 			{
 				WebBrowserRefreshed();
 			}
-		}
-
-		//
-		private void WebBrowserRefreshed()
-		{
-			webBrowser.Refresh();
-			LoadAsync();
 		}
 
 		// スクリーンショット撮影
@@ -176,7 +228,7 @@ namespace AigisBrowser
                     enc.Save(fs);
 
 					// 本当は BalloonTipClicked で画像を開きたいけど処理の書き方がわからない
-					_notifyIcon.Show("スクリーンショット撮影に成功！", string.Format("{0}", Name));
+					notifyIcon.Show("スクリーンショット撮影に成功！", string.Format("{0}", Name));
 				}
 			}
             catch (Exception ex)
@@ -185,12 +237,6 @@ namespace AigisBrowser
                 Debug.WriteLine("Exception: {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message);
             }
         }
-
-		private void webBrowser_Navigated(object sender, NavigationEventArgs e)
-        {
-            // statusBar_Address に現在の URL を表示。
-            statusBar_Address.Text = webBrowser.Source.ToString();
-		}
 
         private void documentChange()
         {
@@ -340,34 +386,14 @@ namespace AigisBrowser
 		// MainWindow の終了処理
 		private void mainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
+			//#if !DEBUG
 			if (MessageBox.Show("終了してもよろしいですか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Asterisk) == MessageBoxResult.No)
 			{
 				e.Cancel = true;
 			}
+			//#endif
 
-			_notifyIcon.Dispose();
-		}
-
-		private void webBrowser_LoadCompleted(object sender, NavigationEventArgs e)
-		{
-			if (webBrowser.Source == new Uri(URL_GAME))
-			{
-				LoadAsync();
-			}
-		}
-
-		// https://dotnetlearning.wordpress.com/2011/02/20/dropdown-menu-in-wpf/
-		private void menuButton_Click(object sender, RoutedEventArgs e)
-		{
-			(sender as Button).ContextMenu.IsEnabled = true;
-			(sender as Button).ContextMenu.PlacementTarget = (sender as Button);
-			(sender as Button).ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-			(sender as Button).ContextMenu.IsOpen = true;
-		}
-
-		private void Button_Click(object sender, RoutedEventArgs e)
-		{
-			_notifyIcon.Show("でぱでぱ", "Debug");
+			notifyIcon.Dispose();
 		}
 	}
 }

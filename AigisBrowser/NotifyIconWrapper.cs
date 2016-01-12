@@ -31,6 +31,7 @@ namespace AigisBrowser
 		{
 			if (_notifyIcon != null)
 			{
+				_notifyIcon.Visible = false;
 				_notifyIcon.Dispose();
 			}
 		}

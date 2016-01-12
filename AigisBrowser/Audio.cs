@@ -34,11 +34,13 @@ namespace AigisBrowser
 		{
 			switch(_isMute)
 			{
-				case true:
-					setVolume(0);
-					break;
 				case false:
+					setVolume(0);
+					_isMute = true;
+					break;
+				case true:
 					setVolume(10);
+					_isMute = false;
 					break;
 			}
 

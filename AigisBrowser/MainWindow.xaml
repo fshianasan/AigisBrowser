@@ -39,10 +39,25 @@
                 </StackPanel>
             </Button>
             
-            <!-- Debug -->
-            <Button Click="Button_Click" ToolTip="Debug用">
-                <TextBlock VerticalAlignment="Center"
-                           Text="Debug" />
+            <!-- Select Normal/R18 -->
+            <Button Name="windowButton_DebugMenu" Click="menuButton2_Click" ToolTip="Debug"
+                    ContextMenuService.IsEnabled="False">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_tools}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="Debug" />
+                </StackPanel>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Click="Button_Click" Header="NotifyIcon" />
+                        <MenuItem Click="Button_Click_1" Header="main_frameを表示" />
+                    </ContextMenu>
+                </Button.ContextMenu>
             </Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.LeftWindowCommands>
@@ -66,7 +81,7 @@
                 </StackPanel>
             </Button> -->
             
-            <!-- Select Normal/R18 -->
+            <!-- Select Normal/R18
             <Button Name="windowButton_SelectMenu" Click="menuButton_Click" ToolTip="一般版とR18版の切り替え"
                     ContextMenuService.IsEnabled="False">
                 <StackPanel Orientation="Horizontal">
@@ -85,7 +100,7 @@
                         <MenuItem Header="R18版" />
                     </ContextMenu>
                 </Button.ContextMenu>
-            </Button>
+            </Button> -->
 
             <!-- Twitter -->
             <Button Click="windowCommand_Twitter" ToolTip="運営Twitterのページを開きます">
