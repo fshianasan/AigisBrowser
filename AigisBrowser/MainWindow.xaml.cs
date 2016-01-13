@@ -50,7 +50,7 @@ namespace AigisBrowser
 			// this.windowButton_SelectMenu.Visibility = Visibility.Hidden;
 			this.windowButton_Refresh.Visibility = Visibility.Visible;
             this.windowButton_ScreenShot.Visibility = Visibility.Visible;
-            this.windowButton_AudioMute.Visibility = Visibility.Visible;
+            // this.windowButton_AudioMute.Visibility = Visibility.Visible;
 
             // ステータスバーの表示切り替え
             this.statusBarItem_Address.Visibility = Visibility.Collapsed;
@@ -178,7 +178,7 @@ namespace AigisBrowser
 		}
 
 		// ミュート
-		private void windowCommand_AudioMute(object sender, RoutedEventArgs e)
+		/* private void windowCommand_AudioMute(object sender, RoutedEventArgs e)
 		{
 			try
 			{
@@ -188,7 +188,7 @@ namespace AigisBrowser
 			{
 				Debug.WriteLine(string.Format("Exception : {0}.{1} >> {2}", ex.TargetSite.ReflectedType.FullName, ex.TargetSite.Name, ex.Message));
 			}
-		}
+		} */
 
 		#endregion
 

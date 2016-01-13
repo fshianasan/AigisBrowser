@@ -43,8 +43,6 @@ namespace AigisBrowser
 					_isMute = false;
 					break;
 			}
-
-			return;
 		}
 	}
 }
