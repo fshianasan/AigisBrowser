@@ -78,7 +78,7 @@ namespace AigisBrowser
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			notifyIcon.Show("でぱでぱ", "Debug");
+			notifyIcon.Show("でぱでぱ", "エチゾラム");
 		}
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -275,18 +275,6 @@ namespace AigisBrowser
                 if (div02 != null) div02.style.visibility = "hidden";
                 if (div03 != null) div03.style.display = "none";
                 if (div04 != null) div04.style.display = "none";
-
-				/* 正直ここから要らないのかもしれない
-                // game_frame
-                var iframe_game = document.frames.item(0) as mshtml.HTMLWindow2;
-                var document_game = iframe_game.document as mshtml.HTMLDocument;
-
-                // game_frame > aigis
-                var iframe_aigis = document_game.frames.item(0) as mshtml.HTMLWindow2;
-                var document_aigis = iframe_aigis.document as mshtml.HTMLDocument;
-
-                var div11 = document_aigis.getElementById("main_frame");
-                if (div11 != null) div11.style.display = "none"; */
             }
             catch (Exception ex)
             {
@@ -327,7 +315,8 @@ namespace AigisBrowser
         private void getTodayQuestName()
         {
             // 曜日限定クエスト
-            string[] questName = new string[7] {
+            string[] questName = new string[7]
+			{
                 "強者の集う戦場", //日曜日
                 "黄金の鎧", // 月曜日
                 "聖霊救出", // 火曜日
