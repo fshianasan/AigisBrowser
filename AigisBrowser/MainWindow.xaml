@@ -107,7 +107,7 @@
             <!-- Twitter -->
             <Button Click="windowCommand_Twitter" ToolTip="運営Twitterのページを開きます">
                 <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
+                    <Rectangle Width="18" Height="18"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill"
@@ -123,7 +123,7 @@
             <!-- DMM.com コミュニティ -->
             <Button Click="windowCommand_Community" ToolTip="公式コミュニティのページを開きます">
                 <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
+                    <Rectangle Width="16" Height="16"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill"
@@ -139,7 +139,7 @@
             <!-- Wiki -->
             <Button Click="windowCommand_Wiki" ToolTip="Wikiのページを開きます">
                 <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
+                    <Rectangle Width="14" Height="14"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill"
@@ -156,7 +156,7 @@
             <Button x:Name="windowButton_Refresh" ToolTip="ブラウザーを再読み込みします"
                     Click="windowCommand_Refresh" Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
+                    <Rectangle Width="12" Height="12"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill"
@@ -222,7 +222,8 @@
                 <WebBrowser x:Name="webBrowser"
                             Source="about:blank"
                             Navigated="webBrowser_Navigated"
-                            AllowDrop="False" LoadCompleted="webBrowser_LoadCompleted" />
+                            AllowDrop="False"
+                            LoadCompleted="webBrowser_LoadCompleted" />
                 <!-- /webBrowser -->
             </DockPanel>
         </Grid>
