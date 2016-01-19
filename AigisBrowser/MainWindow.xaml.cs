@@ -26,28 +26,30 @@ namespace AigisBrowser
 		private readonly string URL_START = "http://www.dmm.com/lp/game/aigis/index008.html/=/navi=none/";
 		private readonly string URL_GAME = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=177037/";
 		
-		// private readonly string URL_START_R18 = "http://www.dmm.co.jp/lp/game/aigis/index012.html/=/navi=none/";
-		// private readonly string URL_GAME_R18 = "http://www.dmm.co.jp/netgame/social/-/gadgets/=/app_id=156462/";
+		private readonly string URL_START_R18 = "http://www.dmm.co.jp/lp/game/aigis/index012.html/=/navi=none/";
+		private readonly string URL_GAME_R18 = "http://www.dmm.co.jp/netgame/social/-/gadgets/=/app_id=156462/";
 
 		// private int VOLUME_DEFAULT = 7;
 
 		private NotifyIconWrapper notifyIcon = new NotifyIconWrapper();
-		private Audio a = new Audio();
+		private Audio audio = new Audio();
 
 		public MainWindow()
-        {
+		{
 			InitializeComponent();
-			
+
+			SelectMenuNormal.IsChecked = true;
 			this.webBrowser.Navigate(new Uri(URL_START));
 		}
 
-        private async void LoadAsync() {
+        private async void LoadAsync()
+		{
 			await Task.Run(() => { System.Threading.Thread.Sleep(2000); });
 
             this.MetroWindow.ResizeMode = ResizeMode.CanMinimize;
 
 			// windowButton の表示切替
-			// this.windowButton_SelectMenu.Visibility = Visibility.Hidden;
+			this.windowButton_SelectMenu.Visibility = Visibility.Hidden;
 			this.windowButton_Refresh.Visibility = Visibility.Visible;
             this.windowButton_ScreenShot.Visibility = Visibility.Visible;
             // this.windowButton_AudioMute.Visibility = Visibility.Visible;
@@ -92,7 +94,7 @@ namespace AigisBrowser
 
 		private void webBrowser_LoadCompleted(object sender, NavigationEventArgs e)
 		{
-			if (webBrowser.Source == new Uri(URL_GAME))
+			if(e.Uri.AbsoluteUri == URL_GAME || e.Uri.AbsoluteUri == URL_GAME_R18)
 			{
 				LoadAsync();
 			}
@@ -394,6 +396,18 @@ namespace AigisBrowser
 			//#endif
 
 			notifyIcon.Dispose();
+		}
+
+		private void selectGamemode_Normal(object sender, RoutedEventArgs e)
+		{
+			SelectMenuR18.IsChecked = false;
+			this.webBrowser.Navigate(new Uri(URL_START));
+		}
+
+		private void selectGamemodeMenu_R18(object sender, RoutedEventArgs e)
+		{
+			SelectMenuNormal.IsChecked = false;
+			this.webBrowser.Navigate(new Uri(URL_START_R18));
 		}
 	}
 }

@@ -54,10 +54,10 @@
                 </StackPanel>
                 <Button.ContextMenu>
                     <ContextMenu>
-                        <TextBlock Text="fff" />
+                        <TextBlock Text="デバッグ用メニュー的な" />
                         <Separator />
-                        <MenuItem Click="Button_Click" Header="NotifyIcon" />
-                        <MenuItem Click="Button_Click_1" Header="main_frameを表示" />
+                        <MenuItem Click="Button_Click" Header="NotifyIcon のテスト" />
+                        <MenuItem Click="Button_Click_1" Header="mainframe の表示" />
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
@@ -83,7 +83,7 @@
                 </StackPanel>
             </Button> -->
 
-            <!-- Select Normal/R18
+            <!-- Select Normal/R18 -->
             <Button Name="windowButton_SelectMenu" Click="menuButton_Click" ToolTip="一般版とR18版の切り替え"
                     ContextMenuService.IsEnabled="False">
                 <StackPanel Orientation="Horizontal">
@@ -94,15 +94,15 @@
                                          Visual="{StaticResource appbar_tools}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
-                    <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="設定" />
+                    <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="切り替え" />
                 </StackPanel>
                 <Button.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="一般版" />
-                        <MenuItem Header="R18版" />
+                        <MenuItem Name="SelectMenuNormal" IsCheckable="True" Header="一般版" Checked="selectGamemode_Normal" />
+                        <MenuItem Name="SelectMenuR18" IsCheckable="True" Header="R18版" Checked="selectGamemodeMenu_R18" />
                     </ContextMenu>
                 </Button.ContextMenu>
-            </Button> -->
+            </Button>
 
             <!-- Twitter -->
             <Button Click="windowCommand_Twitter" ToolTip="運営Twitterのページを開きます">

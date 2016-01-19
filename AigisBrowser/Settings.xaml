@@ -16,6 +16,8 @@
         WindowStartupLocation="CenterScreen">
     
     <Grid>
-        
+        <TextBlock Text="切り替え" />
+        <TextBlock Text="スクリーンショットの保存場所" />
+        <TextBlock Text="切り替え" />
     </Grid>
 </Controls:MetroWindow>

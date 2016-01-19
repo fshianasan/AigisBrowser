@@ -9,13 +9,13 @@ namespace AigisBrowser
 	/// </summary>
 	public partial class Window1
 	{
-		private readonly string URI_MAIN_FRAME = "http://assets.millennium-war.net/00/html/main.htm";
+		private readonly string URL_MAIN_FRAME = "http://assets.millennium-war.net/00/html/main.htm";
 
 		public Window1()
 		{
 			InitializeComponent();
 
-			this.frame.Navigate(new Uri(URI_MAIN_FRAME));
+			this.frame.Navigate(new Uri(URL_MAIN_FRAME));
 		}
 	}
 }
