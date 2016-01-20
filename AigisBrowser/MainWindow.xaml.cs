@@ -172,7 +172,7 @@ namespace AigisBrowser
 		private void windowCommand_ScreenShot(object sender, RoutedEventArgs e)
         {
 			string fileName = string.Format("Aigis-{0}.{1}", DateTime.Now.ToString("yyMMdd-HHmmss"), "png");
-			string directoryPath = string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "ScreenShots");
+			string directoryPath = string.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "Screenshots");
 			if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
 			string filePath = Path.Combine(directoryPath, fileName);
 
