@@ -16,6 +16,7 @@ namespace AigisBrowser
 			InitializeComponent();
 
 			this.frame.Navigate(new Uri(URL_MAIN_FRAME));
+			this.Title = Convert.ToString(URL_MAIN_FRAME);
 		}
 	}
 }

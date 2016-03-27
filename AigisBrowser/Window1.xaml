@@ -1,4 +1,4 @@
-﻿<Window Name="main_frame"  x:Class="AigisBrowser.Window1"
+﻿<Controls:MetroWindow Name="main_frame"  x:Class="AigisBrowser.Window1"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,12 @@
         xmlns:local="clr-namespace:AigisBrowser"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="Window1" Height="768" Width="1000">
+                      
+        Title="Window1"
+        TitleCaps="false"
+        Height="768"
+        Width="1000">
     <Grid>
         <WebBrowser Name="frame" />
     </Grid>
-</Window>
+</Controls:MetroWindow>

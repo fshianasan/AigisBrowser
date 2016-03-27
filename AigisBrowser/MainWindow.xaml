@@ -27,7 +27,7 @@
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands>
             <!-- Github -->
-            <Button Click="windowCommand_Github" ToolTip="Githubを開きます">
+            <Button Name="windowButton_Github"  Click="windowCommand_Github" ToolTip="Githubを開きます">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="18" Height="18"
                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">

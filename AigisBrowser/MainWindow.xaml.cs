@@ -32,14 +32,34 @@ namespace AigisBrowser
 		// private int VOLUME_DEFAULT = 7;
 
 		private NotifyIconWrapper notifyIcon = new NotifyIconWrapper();
-		private Audio audio = new Audio();
+		// private Audio audio = new Audio();
+
+		// Regkey
+		Microsoft.Win32.RegistryKey regkey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", Microsoft.Win32.RegistryKeyPermissionCheck.ReadWriteSubTree);
+
+		string process_name = System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe";
+		string process_dbg_name = System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".vshost.exe";
 
 		public MainWindow()
 		{
 			InitializeComponent();
 
+			#if DEBUG
+			regkey.SetValue(process_dbg_name, 11000, Microsoft.Win32.RegistryValueKind.DWord);
+			#else
+			regkey.SetValue(process_name, 11000, Microsoft.Win32.RegistryValueKind.DWord);
+			#endif
+
+			regkey.Close();
+
 			SelectMenuNormal.IsChecked = true;
+
 			this.webBrowser.Navigate(new Uri(URL_START));
+
+			#if !DEBUG
+			this.windowButton_Github.Visibility = Visibility.Collapsed;
+			this.windowButton_DebugMenu.Visibility = Visibility.Collapsed;
+			#endif
 		}
 
         private async void LoadAsync()
@@ -266,7 +286,7 @@ namespace AigisBrowser
                 document.createStyleSheet().cssText = css.ToString();
 
                 // 各種 Div 要素の変更。
-                var div01 = document.getElementById("dmm-ntgnavi-renew");
+                var div01 = this.getDivElementsByClassName(document, "dmm-ntgnavi");
                 var div02 = document.getElementById("ntg-recommend");
                 var div03 = this.getDivElementsByClassName(document, "area-naviapp mg-t20");
                 var div04 = document.getElementById("foot");
@@ -317,13 +337,13 @@ namespace AigisBrowser
             // 曜日限定クエスト
             string[] questName = new string[7]
 			{
-                "強者の集う戦場", //日曜日
+				"強者の集う戦場, 新魔水晶の守護者", //日曜日
                 "黄金の鎧", // 月曜日
                 "聖霊救出", // 火曜日
-                "空からの贈物, 男だけの祝杯", // 水曜日
-                "新魔水晶の守護者", // 木曜日 
-                "新魔水晶の守護者", // 金曜日
-                "強者の集う戦場", // 土曜日
+                "新魔水晶の守護者", // 水曜日
+                "空からの贈物, 男だけの祝杯", // 木曜日 
+                "黄金の鎧", // 金曜日
+                "強者の集う戦場, 聖霊救出", // 土曜日
             };
 
             // 覚醒の宝珠
