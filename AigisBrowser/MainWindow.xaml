@@ -200,28 +200,24 @@
     <Controls:MetroContentControl>
         <Grid>
             <DockPanel>
-                <!-- StatusBar -->
+                <!-- StatusBar
                 <StatusBar x:Name="statusBar"
                            DockPanel.Dock="Bottom"
                            HorizontalAlignment="Stretch">
 
-                    <!-- statuBar_Address URL 表示 -->
                     <StatusBarItem x:Name="statusBarItem_Address">
                         <TextBlock x:Name="statusBar_Address" />
                     </StatusBarItem>
 
-                    <!-- statusBar_TodayQuestName 曜日限定クエストの表示 -->
                     <StatusBarItem x:Name="statusBarItem_TodayQuestName"
             		               Visibility="Hidden">
                         <TextBlock x:Name="statusBar_TodayQuestName" />
                     </StatusBarItem>
-                </StatusBar>
-                <!-- /StatusBar -->
+                </StatusBar> -->
 
                 <!-- webBrowser -->
                 <WebBrowser x:Name="webBrowser"
                             Source="about:blank"
-                            Navigated="webBrowser_Navigated"
                             AllowDrop="False"
                             LoadCompleted="webBrowser_LoadCompleted" />
                 <!-- /webBrowser -->

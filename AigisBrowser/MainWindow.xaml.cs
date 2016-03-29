@@ -55,6 +55,7 @@ namespace AigisBrowser
 			SelectMenuNormal.IsChecked = true;
 
 			this.webBrowser.Navigate(new Uri(URL_START));
+			this.getTodayQuestName();
 
 			#if !DEBUG
 			this.windowButton_Github.Visibility = Visibility.Collapsed;
@@ -75,13 +76,11 @@ namespace AigisBrowser
             // this.windowButton_AudioMute.Visibility = Visibility.Visible;
 
             // ステータスバーの表示切り替え
-            this.statusBarItem_Address.Visibility = Visibility.Collapsed;
-            this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
+            // this.statusBarItem_Address.Visibility = Visibility.Collapsed;
+            // this.statusBarItem_TodayQuestName.Visibility = Visibility.Visible;
 			
 			this.documentChange();
-            this.windowResize(960, 640);
-
-            getTodayQuestName();
+            this.windowResize(640, 960);
         }
 
 		#region Debug
@@ -120,11 +119,11 @@ namespace AigisBrowser
 			}
 		}
 
-		private void webBrowser_Navigated(object sender, NavigationEventArgs e)
+		/* private void webBrowser_Navigated(object sender, NavigationEventArgs e)
 		{
 			// statusBar_Address に現在の URL を表示。
 			statusBar_Address.Text = webBrowser.Source.ToString();
-		}
+		}*/
 
 		private void WebBrowserRefreshed()
 		{
@@ -302,7 +301,7 @@ namespace AigisBrowser
             }
         }
 
-        private void windowResize(int width, int height)
+        private void windowResize(int height, int width)
         {
             try
             {
@@ -310,7 +309,7 @@ namespace AigisBrowser
                 
                 // MetroWindow の最小値のリサイズ
                 this.MetroWindow.MinWidth = width;
-                this.MetroWindow.MinHeight = height + 52;
+                this.MetroWindow.MinHeight = height;
 
                 // webBrowser のリサイズ
                 this.webBrowser.Width = width;
@@ -318,7 +317,7 @@ namespace AigisBrowser
 
                 // MainWindow のリサイズ
                 this.MetroWindow.Width = width;
-                this.MetroWindow.Height = height + 52; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。}               
+                this.MetroWindow.Height = height + 30; // statusBar が WebBrowser に隠れるのを防ぐ為。絶対良い方法があるはず。}               
 
                 // http://stackoverflow.com/questions/4019831/how-do-you-center-your-main-window-in-wpf
                 Rect workArea = System.Windows.SystemParameters.WorkArea;
@@ -360,16 +359,18 @@ namespace AigisBrowser
 
             DateTime dt = DateTime.Now;
             
-            statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】 {0} / {1}",
+            /*statusBar_TodayQuestName.Text = string.Format("【今日の曜日限定クエスト】 {0} / {1}",
                 questName[(int)dt.DayOfWeek],
                 questName2[(int)dt.DayOfWeek]
-            );
+            );*/
 
             Debug.WriteLine("Debug: 曜日: {0}, 曜日限定: {1}, 覚醒: {2}",
                 dt.DayOfWeek,
                 questName[(int)dt.DayOfWeek],
                 questName2[(int)dt.DayOfWeek]
             );
+
+			notifyIcon.Show("今日の曜日限定クエスト", string.Format("{0}\n{1}", questName[(int)dt.DayOfWeek], questName2[(int)dt.DayOfWeek]));
         }
 
         // コピペ
@@ -397,12 +398,10 @@ namespace AigisBrowser
 		// MainWindow の終了処理
 		private void mainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			//#if !DEBUG
 			if (MessageBox.Show("終了してもよろしいですか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Asterisk) == MessageBoxResult.No)
 			{
 				e.Cancel = true;
 			}
-			//#endif
 
 			notifyIcon.Dispose();
 		}
